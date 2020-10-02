@@ -4,3 +4,4 @@
 
 /.vs
 /GameOfLife/obj
+/GameOfLife/bin/Debug/netcoreapp3.1

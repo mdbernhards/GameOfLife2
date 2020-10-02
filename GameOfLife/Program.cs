@@ -6,7 +6,8 @@ namespace GameOfLife
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Menu menu = new Menu();
+            menu.StartMenu();
         }
     }
 }
