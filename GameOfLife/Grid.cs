@@ -5,8 +5,8 @@ namespace GameOfLife
 {
     public class Grid
     {
-        private int Height { get; set; }
-        private int Width { get; set; }
+        public int Height { get; set; }
+        public int Width { get; set; }
         public string[,] GameGrid { get; set; }
         public string[,] NextGameGrid { get; set; }
         public int Iteration { get; set; }
@@ -87,11 +87,11 @@ namespace GameOfLife
             updateGrid();
         }
 
-        void updateGrid()
+        public void updateGrid()
         {
             do
             {
-                CheckForPause();
+                CheckForPauseOrSave();
 
                 Iteration++;
 
@@ -118,15 +118,28 @@ namespace GameOfLife
             } while (true);
         }
 
-        void CheckForPause()
+
+        void CheckForPauseOrSave()
         {
-            while ((Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Spacebar))
+            while (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Spacebar)
             {
+                Console.WriteLine("Game Paused!");
+
                 do
                 {
-                    if (Console.ReadKey(true).Key == ConsoleKey.Spacebar)
+                    ConsoleKey key = Console.ReadKey(true).Key;
+
+                    if (key == ConsoleKey.Spacebar)
                     {
                         break;
+                    }
+                    
+                    if (key == ConsoleKey.S)
+                    {
+                        GameSave gameSave = new GameSave();
+                        gameSave.SaveGame(GameGrid);
+
+                        Console.WriteLine("Game Saved!");
                     }
                 } while (true);
             }
@@ -141,6 +154,7 @@ namespace GameOfLife
             Console.WriteLine("Alive cell count: " + AliveCellCount);
             Console.WriteLine("");
             Console.WriteLine("Press Space to pause and unpause");
+            Console.WriteLine("While Paused press S to save");
             Console.WriteLine(" ");
 
             for (int i = 0; i < Height; i++)

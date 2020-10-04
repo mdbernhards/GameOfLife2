@@ -11,12 +11,13 @@ namespace GameOfLife
             Console.WriteLine("Choose the size of field, by typing a number:");
             Console.WriteLine("1. 30 X 60");
             Console.WriteLine("2. 40 X 80");
-            Console.WriteLine("3. 50 X 100");
-            Console.WriteLine("4. Custom test grid");
+            Console.WriteLine("3. Custom test grid");
+            Console.WriteLine("4. Load last saved game");
             Console.WriteLine("5. Exit");
 
             string menuNuber = Console.ReadLine();
             Grid grid = new Grid();
+            GameSave gameSave = new GameSave();
 
             switch (menuNuber)
             {
@@ -27,14 +28,12 @@ namespace GameOfLife
                     grid.CreateGrid(40, 80);
                     break;
                 case "3":
-                    grid.CreateGrid(50, 100);
-                    break;
-                case "4":
                     grid.CustomGrid(30, 30);
                     break;
-                case "5":
+                case "4":
+                    gameSave.LoadSave();
                     break;
-                default:
+                case "5":
                     break;
             }
         }
