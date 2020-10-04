@@ -9,15 +9,17 @@ namespace GameOfLife
         private int Width { get; set; }
         public string[,] GameGrid { get; set; }
         public string[,] NextGameGrid { get; set; }
+        public int Iteration { get; set; }
+        public int AliveCellCount { get; set; }
 
         public void CreateGrid(int height, int width)
         {
             Height = height;
             Width = width;
-            Random randomInt = new Random();
-
             GameGrid = new string[Height, Width];
             NextGameGrid = new string[Height, Width];
+
+            Random randomInt = new Random();
 
             for (int i = 0; i < Height; i++)
             {
@@ -26,6 +28,7 @@ namespace GameOfLife
                     if (randomInt.Next(5) == 1)
                     {
                         GameGrid[i, j] = "0";
+                        AliveCellCount++;
                     }
                     else
                     {
@@ -72,10 +75,12 @@ namespace GameOfLife
             GameGrid[18, 10] = "0";
             GameGrid[14, 10] = "0";
             GameGrid[14, 12] = "0";
-            GameGrid[15, 9] = "0";
-            GameGrid[14, 8] = "0";
+            GameGrid[15,  9] = "0";
+            GameGrid[14,  8] = "0";
             GameGrid[15, 13] = "0";
             GameGrid[16, 14] = "0";
+
+            AliveCellCount += 21;
 
             Array.Copy(GameGrid, NextGameGrid, GameGrid.Length);
 
@@ -86,6 +91,8 @@ namespace GameOfLife
         {
             do
             {
+                Iteration++;
+
                 Array.Copy(NextGameGrid, GameGrid, GameGrid.Length);
                 ShowGrid();
 
@@ -106,12 +113,18 @@ namespace GameOfLife
 
                 Thread.Sleep(1000);
 
-            }while (true);
+            } while (true);
         }
 
         void ShowGrid()
         {
             Console.Clear();
+
+            Console.WriteLine("");
+            Console.WriteLine("Iteration: " + Iteration);
+            Console.WriteLine("");
+            Console.WriteLine("Alive cell count: " + AliveCellCount);
+            Console.WriteLine();
 
             for (int i = 0; i < Height; i++)
             {
@@ -133,6 +146,7 @@ namespace GameOfLife
                 if(aliveNeighbors < 2 || aliveNeighbors > 3)
                 {
                     NextGameGrid[x, y] = " ";
+                    AliveCellCount--;
                 }
                 else
                 {
@@ -144,6 +158,7 @@ namespace GameOfLife
                 if(aliveNeighbors == 3)
                 {
                     NextGameGrid[x, y] = "0";
+                    AliveCellCount++;
                 }
                 else
                 {
