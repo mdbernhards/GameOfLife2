@@ -27,7 +27,7 @@ namespace GameOfLife
                 {
                     if (randomInt.Next(5) == 1)
                     {
-                        GameGrid[i, j] = "0";
+                        GameGrid[i, j] = "█";
                         AliveCellCount++;
                     }
                     else
@@ -58,27 +58,27 @@ namespace GameOfLife
                 }
             }
 
-            GameGrid[10, 10] = "0";
-            GameGrid[10, 11] = "0";
-            GameGrid[10, 12] = "0";
-            GameGrid[11, 10] = "0";
-            GameGrid[12, 10] = "0";
-            GameGrid[11, 12] = "0";
-            GameGrid[12, 12] = "0";
-            GameGrid[13, 11] = "0";
-            GameGrid[14, 11] = "0";
-            GameGrid[15, 11] = "0";
-            GameGrid[16, 11] = "0";
-            GameGrid[17, 10] = "0";
-            GameGrid[17, 12] = "0";
-            GameGrid[18, 12] = "0";
-            GameGrid[18, 10] = "0";
-            GameGrid[14, 10] = "0";
-            GameGrid[14, 12] = "0";
-            GameGrid[15,  9] = "0";
-            GameGrid[14,  8] = "0";
-            GameGrid[15, 13] = "0";
-            GameGrid[16, 14] = "0";
+            GameGrid[10, 10] = "█";
+            GameGrid[10, 11] = "█";
+            GameGrid[10, 12] = "█";
+            GameGrid[11, 10] = "█";
+            GameGrid[12, 10] = "█";
+            GameGrid[11, 12] = "█";
+            GameGrid[12, 12] = "█";
+            GameGrid[13, 11] = "█";
+            GameGrid[14, 11] = "█";
+            GameGrid[15, 11] = "█";
+            GameGrid[16, 11] = "█";
+            GameGrid[17, 10] = "█";
+            GameGrid[17, 12] = "█";
+            GameGrid[18, 12] = "█";
+            GameGrid[18, 10] = "█";
+            GameGrid[14, 10] = "█";
+            GameGrid[14, 12] = "█";
+            GameGrid[15,  9] = "█";
+            GameGrid[14,  8] = "█";
+            GameGrid[15, 13] = "█";
+            GameGrid[16, 14] = "█";
 
             AliveCellCount += 21;
 
@@ -91,6 +91,8 @@ namespace GameOfLife
         {
             do
             {
+                CheckForPause();
+
                 Iteration++;
 
                 Array.Copy(NextGameGrid, GameGrid, GameGrid.Length);
@@ -100,7 +102,7 @@ namespace GameOfLife
                 {
                     for (int j = 0; j < Width; j++)
                     {
-                        if(GameGrid[i,j] == "0")
+                        if (GameGrid[i, j] == "█")
                         {
                             CheckIfAlive(i, j, true);
                         }
@@ -116,15 +118,30 @@ namespace GameOfLife
             } while (true);
         }
 
+        void CheckForPause()
+        {
+            while ((Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Spacebar))
+            {
+                do
+                {
+                    if (Console.ReadKey(true).Key == ConsoleKey.Spacebar)
+                    {
+                        break;
+                    }
+                } while (true);
+            }
+        }
+
         void ShowGrid()
         {
             Console.Clear();
 
             Console.WriteLine("");
             Console.WriteLine("Iteration: " + Iteration);
-            Console.WriteLine("");
             Console.WriteLine("Alive cell count: " + AliveCellCount);
-            Console.WriteLine();
+            Console.WriteLine("");
+            Console.WriteLine("Press Space to pause and unpause");
+            Console.WriteLine(" ");
 
             for (int i = 0; i < Height; i++)
             {
@@ -150,14 +167,14 @@ namespace GameOfLife
                 }
                 else
                 {
-                    NextGameGrid[x, y] = "0";
+                    NextGameGrid[x, y] = "█";
                 }
             }
             else
             {
                 if(aliveNeighbors == 3)
                 {
-                    NextGameGrid[x, y] = "0";
+                    NextGameGrid[x, y] = "█";
                     AliveCellCount++;
                 }
                 else
@@ -181,7 +198,7 @@ namespace GameOfLife
                 {
                     if (x + neighbors[i, 0] > -1 && x + neighbors[i, 0] < Height)
                     {
-                        if (GameGrid[x + neighbors[i, 0], y + neighbors[i, 1]] == "0")
+                        if (GameGrid[x + neighbors[i, 0], y + neighbors[i, 1]] == "█")
                         {
                             aliveNeighbors++;
                         }
