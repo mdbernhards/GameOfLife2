@@ -1,30 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading;
 
 namespace GameOfLife
 {
     public class Grid
     {
-        private int _x { get; set; }
-        private int _y { get; set; }
+        private int Height { get; set; }
+        private int Width { get; set; }
         public string[,] GameGrid { get; set; }
+        public string[,] NextGameGrid { get; set; }
 
-        public void CreateGrid(int x, int y)
+        public void CreateGrid(int height, int width)
         {
-            _x = x;
-            _y = y;
+            Height = height;
+            Width = width;
             Random randomInt = new Random();
 
-            GameGrid = new string[_x, _y];
+            GameGrid = new string[Height, Width];
+            NextGameGrid = new string[Height, Width];
 
-            for (int i = 0; i < _x; i++)
+            for (int i = 0; i < Height; i++)
             {
-                for (int j = 0; j < _y; j++)
+                for (int j = 0; j < Width; j++)
                 {
-                    if (randomInt.Next(10) == 1)
+                    if (randomInt.Next(5) == 1)
                     {
                         GameGrid[i, j] = "0";
                     }
@@ -35,21 +34,24 @@ namespace GameOfLife
                 }
             }
 
+            Array.Copy(GameGrid, NextGameGrid, GameGrid.Length);
+
             updateGrid();
         }
 
-        public void CreateCustomGrid(int x, int y)
+        public void CustomGrid(int x, int y)
         {
-            _x = x;
-            _y = y;
+            Height = x;
+            Width = y;
 
-            GameGrid = new string[_x, _y];
+            GameGrid = new string[Height, Width];
+            NextGameGrid = new string[Height, Width];
 
-            for (int i = 0; i < _x; i++)
+            for (int i = 0; i < Height; i++)
             {
-                for (int j = 0; j < _y; j++)
+                for (int j = 0; j < Width; j++)
                 {
-                        GameGrid[i, j] = " ";
+                    GameGrid[i, j] = " ";
                 }
             }
 
@@ -65,8 +67,8 @@ namespace GameOfLife
             GameGrid[15, 11] = "0";
             GameGrid[16, 11] = "0";
             GameGrid[17, 10] = "0";
-            GameGrid[17, 11] = "0";
-            GameGrid[18, 11] = "0";
+            GameGrid[17, 12] = "0";
+            GameGrid[18, 12] = "0";
             GameGrid[18, 10] = "0";
             GameGrid[14, 10] = "0";
             GameGrid[14, 12] = "0";
@@ -75,20 +77,21 @@ namespace GameOfLife
             GameGrid[15, 13] = "0";
             GameGrid[16, 14] = "0";
 
+            Array.Copy(GameGrid, NextGameGrid, GameGrid.Length);
 
             updateGrid();
-
         }
 
         void updateGrid()
         {
             do
             {
-                showGrid();
+                Array.Copy(NextGameGrid, GameGrid, GameGrid.Length);
+                ShowGrid();
 
-                for (int i = 0; i < _x; i++)
+                for (int i = 0; i < Height; i++)
                 {
-                    for (int j = 0; j < _y; j++)
+                    for (int j = 0; j < Width; j++)
                     {
                         if(GameGrid[i,j] == "0")
                         {
@@ -101,22 +104,22 @@ namespace GameOfLife
                     }
                 }
 
+                Thread.Sleep(1000);
 
-                Thread.Sleep(100);
-
-            } while (true);
+            }while (true);
         }
 
-        void showGrid()
+        void ShowGrid()
         {
             Console.Clear();
 
-            for (int i = 0; i < _x; i++)
+            for (int i = 0; i < Height; i++)
             {
-                for (int j = 0; j < _y; j++)
+                for (int j = 0; j < Width; j++)
                 {
                     Console.Write(GameGrid[i, j]);
                 }
+
                 Console.WriteLine();
             }
         }
@@ -129,14 +132,22 @@ namespace GameOfLife
             {
                 if(aliveNeighbors < 2 || aliveNeighbors > 3)
                 {
-                    GameGrid[x, y] = " ";
+                    NextGameGrid[x, y] = " ";
+                }
+                else
+                {
+                    NextGameGrid[x, y] = "0";
                 }
             }
             else
             {
                 if(aliveNeighbors == 3)
                 {
-                    GameGrid[x, y] = "0";
+                    NextGameGrid[x, y] = "0";
+                }
+                else
+                {
+                    NextGameGrid[x, y] = " ";
                 }
             }
         }
@@ -145,15 +156,20 @@ namespace GameOfLife
         {
             int aliveNeighbors = 0;
 
-            int[,] neighbors = new int[,] { { 0, 1 }, { 1, 0 }, { 1, 1 }, { 0, -1 }, { -1, 0 }, { -1, -1 }, { 1, -1 }, { -1, 1 }, };
+            int[,] neighbors = new int[,] { { -1, -1 }, { 0, -1 }, { 1, -1 }, 
+                                            { -1,  0 },            { 1,  0 },
+                                            { -1,  1 }, { 0,  1 }, { 1,  1 }, };
 
             for (int i = 0; i < 8; i++)
             {
-                if (x + neighbors[i, 0] > -1 && x + neighbors[i, 0] < _x && y + neighbors[i, 1] > -1 && y + neighbors[i, 1] < _y)
+                if (y + neighbors[i, 1] > -1 && y + neighbors[i, 1] < Width)
                 {
-                    if (GameGrid[x + neighbors[i, 0], y + neighbors[i, 1]] == "0")
+                    if (x + neighbors[i, 0] > -1 && x + neighbors[i, 0] < Height)
                     {
-                        aliveNeighbors++;
+                        if (GameGrid[x + neighbors[i, 0], y + neighbors[i, 1]] == "0")
+                        {
+                            aliveNeighbors++;
+                        }
                     }
                 }
             }
