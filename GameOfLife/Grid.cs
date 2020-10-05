@@ -11,6 +11,7 @@ namespace GameOfLife
         public string[,] NextGameGrid { get; set; }
         public int Iteration { get; set; }
         public int AliveCellCount { get; set; }
+        private int LastAliveCellCount { get; set; }
 
         public void CreateGrid(int height, int width)
         {
@@ -37,6 +38,7 @@ namespace GameOfLife
                 }
             }
 
+            LastAliveCellCount = AliveCellCount;
             Array.Copy(GameGrid, NextGameGrid, GameGrid.Length);
 
             updateGrid();
@@ -81,6 +83,7 @@ namespace GameOfLife
             GameGrid[16, 14] = "█";
 
             AliveCellCount += 21;
+            LastAliveCellCount = AliveCellCount;
 
             Array.Copy(GameGrid, NextGameGrid, GameGrid.Length);
 
@@ -94,7 +97,7 @@ namespace GameOfLife
                 CheckForPauseOrSave();
 
                 Iteration++;
-
+                LastAliveCellCount = AliveCellCount;
                 Array.Copy(NextGameGrid, GameGrid, GameGrid.Length);
                 ShowGrid();
 
@@ -118,7 +121,6 @@ namespace GameOfLife
             } while (true);
         }
 
-
         void CheckForPauseOrSave()
         {
             while (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Spacebar)
@@ -137,8 +139,7 @@ namespace GameOfLife
                     if (key == ConsoleKey.S)
                     {
                         GameSave gameSave = new GameSave();
-                        gameSave.SaveGame(GameGrid);
-
+                        gameSave.SaveGame(GameGrid, Iteration, LastAliveCellCount);
                         Console.WriteLine("Game Saved!");
                     }
                 } while (true);
@@ -155,7 +156,7 @@ namespace GameOfLife
             Console.WriteLine("");
             Console.WriteLine("Press Space to pause and unpause");
             Console.WriteLine("While Paused press S to save");
-            Console.WriteLine(" ");
+            Console.WriteLine("");
 
             for (int i = 0; i < Height; i++)
             {
@@ -174,7 +175,7 @@ namespace GameOfLife
 
             if (alive)
             {
-                if(aliveNeighbors < 2 || aliveNeighbors > 3)
+                if (aliveNeighbors < 2 || aliveNeighbors > 3)
                 {
                     NextGameGrid[x, y] = " ";
                     AliveCellCount--;
@@ -186,7 +187,7 @@ namespace GameOfLife
             }
             else
             {
-                if(aliveNeighbors == 3)
+                if (aliveNeighbors == 3)
                 {
                     NextGameGrid[x, y] = "█";
                     AliveCellCount++;
