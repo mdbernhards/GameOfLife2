@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace GameOfLife
 {
     public class GameSave
     {
-
         public void SaveGame(string[,] gameGrid, int iteration, int aliveCellCount)
         {
 
@@ -36,10 +33,9 @@ namespace GameOfLife
 
         public void LoadSave()
         {
-            String gridInput = File.ReadAllText("GridSave.txt");
+            string gridInput = File.ReadAllText("GridSave.txt");
 
             int i = 0;
-
             string[,] gameGrid = new string[gridInput.Split('\n').Length - 1, gridInput.Split('\n')[0].Length];
 
             foreach (var row in gridInput.Split('\n'))
@@ -50,12 +46,12 @@ namespace GameOfLife
                 {
                     gameGrid[i, j] = col[j].ToString();
                 }
+
                 i++;
             }
 
-            String infoInput = File.ReadAllText("InfoSave.txt");
+            string infoInput = File.ReadAllText("InfoSave.txt");
             var info = infoInput.Split('\n');
-
 
             Grid grid = new Grid
             {
@@ -64,15 +60,14 @@ namespace GameOfLife
                 Height = gameGrid.GetLength(0),
                 Width = gameGrid.GetLength(1),
 
-                Iteration = int.Parse(info[0]),
+                Iteration = int.Parse(info[0]) - 1,
                 AliveCellCount = int.Parse(info[1])
             };
 
             Array.Copy(gameGrid, grid.GameGrid, gameGrid.Length);
             Array.Copy(gameGrid, grid.NextGameGrid, gameGrid.Length);
 
-            grid.updateGrid();
-
+            grid.UpdateGrid();
         }
     }
 }

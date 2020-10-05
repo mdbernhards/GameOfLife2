@@ -28,7 +28,7 @@ namespace GameOfLife
                     grid.CreateGrid(40, 80);
                     break;
                 case "3":
-                    grid.CustomGrid(30, 30);
+                    grid.CreateCustomGrid(30, 30);
                     break;
                 case "4":
                     gameSave.LoadSave();

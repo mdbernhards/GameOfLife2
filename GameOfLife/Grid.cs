@@ -41,10 +41,10 @@ namespace GameOfLife
             LastAliveCellCount = AliveCellCount;
             Array.Copy(GameGrid, NextGameGrid, GameGrid.Length);
 
-            updateGrid();
+            UpdateGrid();
         }
 
-        public void CustomGrid(int x, int y)
+        public void CreateCustomGrid(int x, int y)
         {
             Height = x;
             Width = y;
@@ -87,18 +87,19 @@ namespace GameOfLife
 
             Array.Copy(GameGrid, NextGameGrid, GameGrid.Length);
 
-            updateGrid();
+            UpdateGrid();
         }
 
-        public void updateGrid()
+        public void UpdateGrid()
         {
             do
             {
                 CheckForPauseOrSave();
-
-                Iteration++;
+                
                 LastAliveCellCount = AliveCellCount;
+                Iteration++;
                 Array.Copy(NextGameGrid, GameGrid, GameGrid.Length);
+
                 ShowGrid();
 
                 for (int i = 0; i < Height; i++)
@@ -107,11 +108,11 @@ namespace GameOfLife
                     {
                         if (GameGrid[i, j] == "█")
                         {
-                            CheckIfAlive(i, j, true);
+                            CheckIfCellAlive(i, j, true);
                         }
                         else
                         {
-                            CheckIfAlive(i, j, false);
+                            CheckIfCellAlive(i, j, false);
                         }
                     }
                 }
@@ -169,7 +170,7 @@ namespace GameOfLife
             }
         }
 
-        void CheckIfAlive(int x, int y, bool alive)
+        void CheckIfCellAlive(int x, int y, bool alive)
         {
             int aliveNeighbors = GetAliveNeighbors(x,y);
 
