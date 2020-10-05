@@ -2,8 +2,10 @@
 
 namespace GameOfLife
 {
-    public class Menu
+    //Creates and draws all UI elements
+    public class UIElements
     {
+        //Creates the start menu
         public void StartMenu()
         {
             Console.WriteLine("Hello to Game of Life!");

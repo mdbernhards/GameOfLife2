@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            Menu menu = new Menu();
+            UIElements menu = new UIElements();
             menu.StartMenu();
         }
     }
