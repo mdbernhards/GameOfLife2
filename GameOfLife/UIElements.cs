@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.InteropServices.ComTypes;
+using System.Threading;
 
 namespace GameOfLife
 {
@@ -40,7 +42,7 @@ namespace GameOfLife
                     grid.CreateCustomGrid(30, 30);
                     break;
                 case "4":
-                    grid.CreateGrids(20, 50, 1000);
+                    grid.CreateGrids(18, 40, 1000);
                     break;
                 case "5":
                     var saveInfo = gameSave.ReadSaveFile();
@@ -109,6 +111,86 @@ namespace GameOfLife
 
                 Console.WriteLine();
             }
+        }
+
+        public void DrawEightGrids(bool[,,] gameGrid, int iteration, int aliveCellCount, int height, int width, int[] selectedGames)
+        {
+            Console.Clear();
+
+            Console.WriteLine("");
+            Console.WriteLine("Iteration: " + iteration);
+            Console.WriteLine("All game combined alive cell count: " + aliveCellCount);
+            Console.WriteLine("");
+            Console.WriteLine("Press Space to pause and unpause");
+            Console.WriteLine("While Paused press S to save");
+            Console.WriteLine("");
+
+            for (int l = 0; l < 2; l++)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    if (l == 0)
+                    {
+                        Console.Write("Game: " + (selectedGames[i] + 1) + new string(' ', gameGrid.GetLength(1) - 4));
+                    }
+                    else
+                    {
+                        Console.Write("Game: " + (selectedGames[i+4] + 1) + new string(' ', gameGrid.GetLength(1) - 4));
+                    }
+                }
+
+                Console.WriteLine("");
+
+                for (int i = 0; i < height; i++)
+                {
+                    for (int k = 0; k < 4; k++)
+                    {
+                        if (l == 1)
+                        {
+                            k += 4;
+                        }
+
+                        for (int j = 0; j < width; j++)
+                        {
+                            if (gameGrid[i, j, selectedGames[k]] == true)
+                            {
+                                Console.Write("█");
+                            }
+                            else
+                            {
+                                Console.Write(" ");
+                            }
+                        }
+
+                        if (l == 1)
+                        {
+                            k -= 4;
+                        }
+
+                        Console.Write(" || ");
+                    }
+
+                    Console.WriteLine("");
+                }
+                Console.WriteLine("");
+                Console.WriteLine("");
+            }
+        }
+
+        public int[] GameSelection(int numberOfGames)
+        {
+            int[] selectedGames = new int[8];
+
+            Console.Clear();
+            Console.WriteLine("Choose Games to show from 1 to " + numberOfGames);
+
+            for (int i = 0; i < 8; i++)
+            {
+                Console.Write("Game No. " + (i + 1) + ": ");
+                selectedGames[i] = Int32.Parse(Console.ReadLine()) - 1;
+            }
+
+            return selectedGames;
         }
     }
 }

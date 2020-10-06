@@ -10,12 +10,13 @@ namespace GameOfLife
     {
         private int Height { get; set; }
         private int Width { get; set; }
-        public bool[, ,] GameGrid { get; set; }
+        private bool[, ,] GameGrid { get; set; }
         public bool[, ,] NextGameGrid { get; set; }
-        public int Iteration { get; set; }
-        public int AliveCellCount { get; set; }
+        private int Iteration { get; set; }
+        private int AliveCellCount { get; set; }
         private int LastAliveCellCount { get; set; }
-        public int NumberOfGames { get; set; }
+        private int NumberOfGames { get; set; }
+        private int[] SelectedGames { get; set; }
 
         public const bool AliveCell = true;
         public const bool DeadCell = false;
@@ -27,11 +28,21 @@ namespace GameOfLife
         /// </summary>
         public void CreateGrids(int height, int width, int numberOfGames)
         {
+            SelectedGames = new int[8];
             NumberOfGames = numberOfGames;
             Height = height;
             Width = width;
             GameGrid = new bool[Height, Width, NumberOfGames];
             NextGameGrid = new bool[Height, Width, NumberOfGames];
+
+            if(NumberOfGames > 1)
+            {
+                SelectedGames = uiElements.GameSelection(NumberOfGames);
+            }
+            else
+            {
+                SelectedGames[0] = 1;
+            }
 
             Random randomInt = new Random();
 
@@ -146,7 +157,14 @@ namespace GameOfLife
                 Iteration++;
                 Array.Copy(NextGameGrid, GameGrid, GameGrid.Length);
 
-                uiElements.DrawGrid(GameGrid, Iteration, AliveCellCount, Height, Width);
+                if(NumberOfGames > 1)
+                {
+                    uiElements.DrawEightGrids(GameGrid, Iteration, AliveCellCount, Height, Width, SelectedGames);
+                }
+                else
+                {
+                    uiElements.DrawGrid(GameGrid, Iteration, AliveCellCount, Height, Width);
+                }
 
                 for (int k = 0; k < NumberOfGames; k++)
                 {
