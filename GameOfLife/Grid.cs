@@ -17,6 +17,8 @@ namespace GameOfLife
         public const bool AliveCell = true;
         public const bool DeadCell = false;
 
+        UIElements uiElements = new UIElements();
+
         //Creates random start grid when it's selected from start menu
         public void CreateGrid(int height, int width)
         {
@@ -98,19 +100,36 @@ namespace GameOfLife
             task.Wait();
         }
 
+        //Creates the Grid and sets up all the needed variables up, when reading from save file
+        public void CreateGridFromFile(bool[,] gameGrid, int iteration, int aliveCellCount)
+        {
+            GameGrid = new bool[gameGrid.GetLength(0), gameGrid.GetLength(1)];
+            NextGameGrid = new bool[gameGrid.GetLength(0), gameGrid.GetLength(1)];
+            Height = gameGrid.GetLength(0);
+            Width = gameGrid.GetLength(1);
+
+            Iteration = iteration;
+            AliveCellCount = aliveCellCount;
+
+            Array.Copy(gameGrid, GameGrid, gameGrid.Length);
+            Array.Copy(gameGrid, NextGameGrid, gameGrid.Length);
+
+            var task = UpdateGrid();
+            task.Wait();
+        }
 
         //Updates the grid every second, calls methods that check if cells are alive or dead
         public async Task UpdateGrid()
         {
             do
             {
-                CheckForPauseOrSave();
+                uiElements.CheckForPauseOrSave(GameGrid, Iteration, LastAliveCellCount);
                 
                 LastAliveCellCount = AliveCellCount;
                 Iteration++;
                 Array.Copy(NextGameGrid, GameGrid, GameGrid.Length);
 
-                ShowGrid();
+                uiElements.ShowGrid(GameGrid, Iteration, AliveCellCount, Height, Width);
 
                 for (int i = 0; i < Height; i++)
                 {
@@ -130,64 +149,6 @@ namespace GameOfLife
                 await Task.Delay(1000);
 
             } while (true);
-        }
-
-        //Checks if Game of Life needs to be: paused, unpaused or saved
-        private void CheckForPauseOrSave() //move to UIElements
-        {
-            while (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Spacebar)
-            {
-                Console.WriteLine("Game Paused!");
-
-                do
-                {
-                    ConsoleKey key = Console.ReadKey(true).Key;
-
-                    if (key == ConsoleKey.Spacebar)
-                    {
-                        break;
-                    }
-                    
-                    if (key == ConsoleKey.S)
-                    {
-                        GameSave gameSave = new GameSave(); //constructor
-                        gameSave.SaveGame(GameGrid, Iteration, LastAliveCellCount);
-                        Console.WriteLine("Game Saved!");
-                    }
-                } while (true);
-            }
-        }
-
-        //Draws the grid every time it has been updated
-        private void ShowGrid() //move to UIElements
-        {
-            Console.Clear();
-
-            Console.WriteLine("");
-            Console.WriteLine("Iteration: " + Iteration);
-            Console.WriteLine("Alive cell count: " + AliveCellCount);
-            Console.WriteLine("");
-            Console.WriteLine("Press Space to pause and unpause");
-            Console.WriteLine("While Paused press S to save");
-            Console.WriteLine("");
-
-            for (int i = 0; i < Height; i++)
-            {
-                for (int j = 0; j < Width; j++)
-                {
-                    if(GameGrid[i, j] == AliveCell)
-                    {
-                        Console.Write("█");
-                    }
-                    else
-                    {
-                        Console.Write(" ");
-                    }
-                    
-                }
-
-                Console.WriteLine();
-            }
         }
 
         //Checks if a cell is dead or alive

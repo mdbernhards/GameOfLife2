@@ -66,23 +66,8 @@ namespace GameOfLife
                 }
             }
 
-            //move to Grid
-            Grid grid = new Grid
-            {
-                GameGrid = new bool[gameGrid.GetLength(0), gameGrid.GetLength(1)],
-                NextGameGrid = new bool[gameGrid.GetLength(0), gameGrid.GetLength(1)],
-                Height = gameGrid.GetLength(0),
-                Width = gameGrid.GetLength(1),
-
-                Iteration = int.Parse(gridRows[0]) - 1,
-                AliveCellCount = int.Parse(gridRows[1])
-            };
-
-            Array.Copy(gameGrid, grid.GameGrid, gameGrid.Length);
-            Array.Copy(gameGrid, grid.NextGameGrid, gameGrid.Length);
-
-            var task = grid.UpdateGrid();
-            task.Wait();
+            Grid grid = new Grid();
+            grid.CreateGridFromFile(gameGrid, int.Parse(gridRows[0]) - 1, int.Parse(gridRows[1]));
         }
     }
 }
