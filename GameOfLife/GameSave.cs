@@ -9,7 +9,7 @@ namespace GameOfLife
         public const string filePath = "GameSave.txt";
 
         //Saves game state when it's paused and S is pressed
-        public void SaveGame(bool[,] gameGrid, int iteration, int aliveCellCount)
+        public void SaveGame(bool[, ,] gameGrid, int iteration, int aliveCellCount)
         {
             using var swGrid = new StreamWriter(filePath);
 
@@ -22,7 +22,7 @@ namespace GameOfLife
             {
                 for (int j = 0; j < gameGrid.GetLength(1); j++)
                 {
-                    if (gameGrid[i, j] == true)
+                    if (gameGrid[i, j, 0] == true)
                     {
                         swGrid.Write("█");
                     }
@@ -39,12 +39,10 @@ namespace GameOfLife
         }
 
         //Loads saved game state when needed
-        public void LoadSave()
+        public (bool[,,], int, int) ReadSaveFile()
         {
             string gridInput = File.ReadAllText(filePath);
-
-            
-            bool[,] gameGrid = new bool[gridInput.Split('\n').Length , gridInput.Split('\n')[2].Length];
+            bool[, ,] gameGrid = new bool[gridInput.Split('\n').Length , gridInput.Split('\n')[2].Length, 1];
 
             var gridRows = gridInput.Split('\n');
             
@@ -57,17 +55,19 @@ namespace GameOfLife
                 {
                     if (gridCol[j].ToString() == "█")
                     {
-                        gameGrid[i, j] = true;
+                        gameGrid[i, j, 0] = true;
                     }
                     else
                     {
-                        gameGrid[i, j] = false;
+                        gameGrid[i, j, 0] = false;
                     }
                 }
             }
 
-            Grid grid = new Grid();
-            grid.CreateGridFromFile(gameGrid, int.Parse(gridRows[0]) - 1, int.Parse(gridRows[1]));
+            int iteration = int.Parse(gridRows[0]) - 1;
+            int aliveCellCount = int.Parse(gridRows[1]);
+
+            return (gameGrid, iteration, aliveCellCount);
         }
     }
 }

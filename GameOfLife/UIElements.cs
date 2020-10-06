@@ -16,8 +16,9 @@ namespace GameOfLife
             Console.WriteLine("1. 30 X 60");
             Console.WriteLine("2. 40 X 80");
             Console.WriteLine("3. Custom test grid");
-            Console.WriteLine("4. Load last saved game");
-            Console.WriteLine("5. Exit");
+            Console.WriteLine("4. 1000 games in paralel");
+            Console.WriteLine("5. Load last saved game");
+            Console.WriteLine("6. Exit");
 
             string menuNuber = Console.ReadLine();
             Grid grid = new Grid();
@@ -26,24 +27,28 @@ namespace GameOfLife
             switch (menuNuber)
             {
                 case "1":
-                    grid.CreateGrid(30, 60);
+                    grid.CreateGrids(30, 60, 1); //height, width, number of games in paralel
                     break;
                 case "2":
-                    grid.CreateGrid(40, 80);
+                    grid.CreateGrids(40, 80, 1);
                     break;
                 case "3":
                     grid.CreateCustomGrid(30, 30);
                     break;
                 case "4":
-                    gameSave.LoadSave();
+                    grid.CreateGrids(30, 60, 1000);
                     break;
                 case "5":
+                    var saveInfo = gameSave.ReadSaveFile();
+                    grid.CreateGridFromFile(saveInfo.Item1, saveInfo.Item2, saveInfo.Item3);
+                    break;
+                case "6":
                     break;
             }
         }
 
         //Checks if Game of Life needs to be: paused, unpaused or saved
-        public void CheckForPauseOrSave(bool[,] gameGrid, int iteration, int aliveCellCount) 
+        public void CheckForPauseOrSave(bool[, ,] gameGrid, int iteration, int aliveCellCount) 
         {
             while (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Spacebar)
             {
@@ -68,7 +73,7 @@ namespace GameOfLife
         }
 
         //Draws the grid every time it has been updated
-        public void ShowGrid(bool[,] gameGrid, int iteration, int aliveCellCount, int height, int width)
+        public void DrawGrid(bool[, ,] gameGrid, int iteration, int aliveCellCount, int height, int width)
         {
             Console.Clear();
 
@@ -84,7 +89,7 @@ namespace GameOfLife
             {
                 for (int j = 0; j < width; j++)
                 {
-                    if (gameGrid[i, j] == true)
+                    if (gameGrid[i, j, 0] == true)
                     {
                         Console.Write("█");
                     }
@@ -92,7 +97,6 @@ namespace GameOfLife
                     {
                         Console.Write(" ");
                     }
-
                 }
 
                 Console.WriteLine();
