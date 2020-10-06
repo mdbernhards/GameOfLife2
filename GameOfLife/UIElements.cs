@@ -2,12 +2,16 @@
 
 namespace GameOfLife
 {
-    //Creates and draws all UI elements
+    /// <summary>
+    /// Creates and draws all UI elements
+    /// </summary>
     public class UIElements
     {
         GameSave gameSave = new GameSave();
 
-        //Creates the start menu
+        /// <summary>
+        /// Creates the start menu
+        /// </summary>
         public void StartMenu()
         {
             Console.WriteLine("Hello to Game of Life!");
@@ -36,7 +40,7 @@ namespace GameOfLife
                     grid.CreateCustomGrid(30, 30);
                     break;
                 case "4":
-                    grid.CreateGrids(30, 60, 1000);
+                    grid.CreateGrids(20, 50, 1000);
                     break;
                 case "5":
                     var saveInfo = gameSave.ReadSaveFile();
@@ -47,7 +51,9 @@ namespace GameOfLife
             }
         }
 
-        //Checks if Game of Life needs to be: paused, unpaused or saved
+        /// <summary>
+        /// Checks if Game of Life needs to be: paused, unpaused or saved
+        /// </summary>
         public void CheckForPauseOrSave(bool[, ,] gameGrid, int iteration, int aliveCellCount) 
         {
             while (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Spacebar)
@@ -72,7 +78,9 @@ namespace GameOfLife
             }
         }
 
-        //Draws the grid every time it has been updated
+        /// <summary>
+        /// Draws the grid every time it has been updated
+        /// </summary>
         public void DrawGrid(bool[, ,] gameGrid, int iteration, int aliveCellCount, int height, int width)
         {
             Console.Clear();

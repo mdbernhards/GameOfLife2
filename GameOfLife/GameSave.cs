@@ -1,14 +1,17 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace GameOfLife
 {
-    //Saves and loads saved Game of Life state
+    /// <summary>
+    /// Saves and loads saved Game of Life state
+    /// </summary>
     public class GameSave
     {
         public const string filePath = "GameSave.txt";
 
-        //Saves game state when it's paused and S is pressed
+        /// <summary>
+        /// Saves game state when it's paused and S is pressed
+        /// </summary>
         public void SaveGame(bool[, ,] gameGrid, int iteration, int aliveCellCount)
         {
             using var swGrid = new StreamWriter(filePath);
@@ -38,14 +41,15 @@ namespace GameOfLife
             swGrid.Close();
         }
 
-        //Loads saved game state when needed
+        /// <summary>
+        /// Loads saved game state when needed
+        /// </summary>
         public (bool[,,], int, int) ReadSaveFile()
         {
             string gridInput = File.ReadAllText(filePath);
             bool[, ,] gameGrid = new bool[gridInput.Split('\n').Length , gridInput.Split('\n')[2].Length, 1];
 
             var gridRows = gridInput.Split('\n');
-            
 
             for (int i = 2; i < gridRows.Length ; i++)
             {

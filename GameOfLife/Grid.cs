@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 
 namespace GameOfLife
 {
-    //Handles Game of Life logic
+    /// <summary>
+    /// Handles Game of Life logic
+    /// </summary>
     public class Grid
     {
         private int Height { get; set; }
@@ -20,7 +22,9 @@ namespace GameOfLife
 
         UIElements uiElements = new UIElements();
 
-        //Creates random start grid when it's selected from start menu
+        /// <summary>
+        /// Creates random start grid when it's selected from start menu
+        /// </summary>
         public void CreateGrids(int height, int width, int numberOfGames)
         {
             NumberOfGames = numberOfGames;
@@ -56,7 +60,9 @@ namespace GameOfLife
             task.Wait();
         }
 
-        //Creates custom start grid when selected from menu
+        /// <summary>
+        /// Creates custom start grid when selected from menu
+        /// </summary>
         public void CreateCustomGrid(int height, int width)
         {
             NumberOfGames = 1;
@@ -104,7 +110,9 @@ namespace GameOfLife
             task.Wait();
         }
 
-        //Creates the Grid and sets up all the needed variables up, when reading from save file
+        /// <summary>
+        /// Creates the Grid and sets up all the needed variables up, when reading from save file
+        /// </summary>
         public void CreateGridFromFile(bool[, ,] gameGrid, int iteration, int aliveCellCount)
         {
             NumberOfGames = 1;
@@ -125,7 +133,9 @@ namespace GameOfLife
             task.Wait();
         }
 
-        //Updates the grid every second, calls methods that check if cells are alive or dead
+        /// <summary>
+        /// Updates the grid every second, calls methods that check if cells are alive or dead
+        /// </summary>
         public async Task UpdateGrid()
         {
             do
@@ -161,7 +171,9 @@ namespace GameOfLife
             } while (true);
         }
 
-        //Checks if a cell is dead or alive
+        /// <summary>
+        /// Checks if a cell is dead or alive
+        /// </summary>
         private void CheckIfCellAlive(int height, int width, bool alive, int gameNumber)
         {
             int aliveNeighbors = GetAliveNeighbors(height, width, gameNumber);
@@ -175,7 +187,7 @@ namespace GameOfLife
                 }
                 else
                 {
-                    NextGameGrid[height, width, gameNumber] = AliveCell; //make constant, true false
+                    NextGameGrid[height, width, gameNumber] = AliveCell;
                 }
             }
             else
@@ -192,7 +204,9 @@ namespace GameOfLife
             }
         }
 
-        //Returns how many neighbor cells does a cell have
+        /// <summary>
+        /// Returns how many neighbor cells does a cell have
+        /// </summary>
         private int GetAliveNeighbors(int height, int width, int gameNumber)
         {
             int aliveNeighbors = 0;
