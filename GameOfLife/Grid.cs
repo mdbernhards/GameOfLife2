@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GameOfLife
@@ -13,8 +14,8 @@ namespace GameOfLife
         private bool[, ,] GameGrid { get; set; }
         public bool[, ,] NextGameGrid { get; set; }
         private int Iteration { get; set; }
-        private int AliveCellCount { get; set; }
-        private int LastAliveCellCount { get; set; }
+        private int[] AliveCellCount { get; set; }
+        private int[] LastAliveCellCount { get; set; }
         private int NumberOfGames { get; set; }
         private int[] SelectedGames { get; set; }
 
@@ -34,8 +35,10 @@ namespace GameOfLife
             Width = width;
             GameGrid = new bool[Height, Width, NumberOfGames];
             NextGameGrid = new bool[Height, Width, NumberOfGames];
+            AliveCellCount = new int[NumberOfGames];
+            LastAliveCellCount = new int[NumberOfGames];
 
-            if(NumberOfGames > 1)
+            if (NumberOfGames > 1)
             {
                 SelectedGames = uiElements.GameSelection(NumberOfGames);
             }
@@ -55,7 +58,7 @@ namespace GameOfLife
                         if (randomInt.Next(5) == 1)
                         {
                             GameGrid[i, j, k] = AliveCell;
-                            AliveCellCount++;
+                            AliveCellCount[k]++;
                         }
                         else
                         {
@@ -64,7 +67,7 @@ namespace GameOfLife
                     }
                 }
             }
-            LastAliveCellCount = AliveCellCount;
+            Array.Copy(AliveCellCount, LastAliveCellCount, AliveCellCount.Length);
             Array.Copy(GameGrid, NextGameGrid, GameGrid.Length);
 
             var task = UpdateGrid();
@@ -82,7 +85,10 @@ namespace GameOfLife
 
             GameGrid = new bool[Height, Width, NumberOfGames];
             NextGameGrid = new bool[Height, Width, NumberOfGames];
-                for (int i = 0; i < Height; i++)
+            AliveCellCount = new int[NumberOfGames];
+            LastAliveCellCount = new int[NumberOfGames];
+
+            for (int i = 0; i < Height; i++)
                 {
                     for (int j = 0; j < Width; j++)
                     {
@@ -112,9 +118,9 @@ namespace GameOfLife
             GameGrid[15, 13, 0] = AliveCell;
             GameGrid[16, 14, 0] = AliveCell;
 
-            AliveCellCount += 21;
-            LastAliveCellCount = AliveCellCount;
+            AliveCellCount[0] += 21;
 
+            Array.Copy(AliveCellCount, LastAliveCellCount, AliveCellCount.Length);
             Array.Copy(GameGrid, NextGameGrid, GameGrid.Length);
 
             var task = UpdateGrid();
@@ -124,9 +130,10 @@ namespace GameOfLife
         /// <summary>
         /// Creates the Grid and sets up all the needed variables up, when reading from save file
         /// </summary>
-        public void CreateGridFromFile(bool[, ,] gameGrid, int iteration, int aliveCellCount)
+        public void CreateGridFromFile(bool[, ,] gameGrid, int iteration, int[] aliveCellCount)
         {
-            NumberOfGames = 1;
+            NumberOfGames = gameGrid.GetLength(2);
+            LastAliveCellCount = new int[NumberOfGames];
 
             GameGrid = new bool[gameGrid.GetLength(0), gameGrid.GetLength(1), NumberOfGames];
             NextGameGrid = new bool[gameGrid.GetLength(0), gameGrid.GetLength(1), NumberOfGames];
@@ -135,13 +142,22 @@ namespace GameOfLife
 
             Iteration = iteration;
             AliveCellCount = aliveCellCount;
-            
 
+            Array.Copy(AliveCellCount, LastAliveCellCount, AliveCellCount.Length);
             Array.Copy(gameGrid, GameGrid, gameGrid.Length);
             Array.Copy(gameGrid, NextGameGrid, gameGrid.Length);
 
+            if (NumberOfGames > 1)
+            {
+                SelectedGames = uiElements.GameSelection(NumberOfGames);
+            }
+            else
+            {
+                SelectedGames[0] = 1;
+            }
+
             var task = UpdateGrid();
-            task.Wait();
+             task.Wait();
         }
 
         /// <summary>
@@ -151,10 +167,10 @@ namespace GameOfLife
         {
             do
             {
-                uiElements.CheckForPauseOrSave(GameGrid, Iteration, LastAliveCellCount);
-                
-                LastAliveCellCount = AliveCellCount;
+                uiElements.CheckForPauseOrSave(GameGrid, Iteration, LastAliveCellCount, NumberOfGames);
                 Iteration++;
+
+                Array.Copy(AliveCellCount, LastAliveCellCount, AliveCellCount.Length);
                 Array.Copy(NextGameGrid, GameGrid, GameGrid.Length);
 
                 if(NumberOfGames > 1)
@@ -163,7 +179,7 @@ namespace GameOfLife
                 }
                 else
                 {
-                    uiElements.DrawGrid(GameGrid, Iteration, AliveCellCount, Height, Width);
+                    uiElements.DrawGrid(GameGrid, Iteration, AliveCellCount.Sum(), Height, Width);
                 }
 
                 for (int k = 0; k < NumberOfGames; k++)
@@ -201,7 +217,7 @@ namespace GameOfLife
                 if (aliveNeighbors < 2 || aliveNeighbors > 3)
                 {
                     NextGameGrid[height, width, gameNumber] = DeadCell;
-                    AliveCellCount--;
+                    AliveCellCount[gameNumber]--;
                 }
                 else
                 {
@@ -213,7 +229,7 @@ namespace GameOfLife
                 if (aliveNeighbors == 3)
                 {
                     NextGameGrid[height, width, gameNumber] = AliveCell;
-                    AliveCellCount++;
+                    AliveCellCount[gameNumber]++;
                 }
                 else
                 {

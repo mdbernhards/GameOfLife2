@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Runtime.InteropServices.ComTypes;
-using System.Threading;
+using System.Linq;
 
 namespace GameOfLife
 {
@@ -56,7 +55,7 @@ namespace GameOfLife
         /// <summary>
         /// Checks if Game of Life needs to be: paused, unpaused or saved
         /// </summary>
-        public void CheckForPauseOrSave(bool[, ,] gameGrid, int iteration, int aliveCellCount) 
+        public void CheckForPauseOrSave(bool[, ,] gameGrid, int iteration, int[] aliveCellCount, int numberOfGames) 
         {
             while (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Spacebar)
             {
@@ -73,7 +72,7 @@ namespace GameOfLife
 
                     if (key == ConsoleKey.S)
                     {
-                        gameSave.SaveGame(gameGrid, iteration, aliveCellCount);
+                        gameSave.SaveGame(gameGrid, iteration, aliveCellCount, numberOfGames);
                         Console.WriteLine("Game Saved!");
                     }
                 } while (true);
@@ -113,13 +112,16 @@ namespace GameOfLife
             }
         }
 
-        public void DrawEightGrids(bool[,,] gameGrid, int iteration, int aliveCellCount, int height, int width, int[] selectedGames)
+        /// <summary>
+        /// Draws eight grids every time they have been updated
+        /// </summary>
+        public void DrawEightGrids(bool[,,] gameGrid, int iteration, int[] aliveCellCount, int height, int width, int[] selectedGames)
         {
             Console.Clear();
 
             Console.WriteLine("");
             Console.WriteLine("Iteration: " + iteration);
-            Console.WriteLine("All game combined alive cell count: " + aliveCellCount);
+            Console.WriteLine("All game combined alive cell count: " + aliveCellCount.Sum());
             Console.WriteLine("");
             Console.WriteLine("Press Space to pause and unpause");
             Console.WriteLine("While Paused press S to save");
@@ -131,11 +133,11 @@ namespace GameOfLife
                 {
                     if (l == 0)
                     {
-                        Console.Write("Game: " + (selectedGames[i] + 1) + new string(' ', gameGrid.GetLength(1) - 4));
+                        Console.Write("Game: " + (selectedGames[i] + 1)  + "  Alive cell count: " + aliveCellCount[selectedGames[i]] + new string(' ', gameGrid.GetLength(1) - 25));
                     }
                     else
                     {
-                        Console.Write("Game: " + (selectedGames[i+4] + 1) + new string(' ', gameGrid.GetLength(1) - 4));
+                        Console.Write("Game: " + (selectedGames[i + 4] + 1) + "  Alive cell count: " + aliveCellCount[selectedGames[i + 4]] + new string(' ', gameGrid.GetLength(1) - 25));
                     }
                 }
 
@@ -177,6 +179,9 @@ namespace GameOfLife
             }
         }
 
+        /// <summary>
+        /// UI that lets you select which grids to show, returns the grid "id's"
+        /// </summary>
         public int[] GameSelection(int numberOfGames)
         {
             int[] selectedGames = new int[8];

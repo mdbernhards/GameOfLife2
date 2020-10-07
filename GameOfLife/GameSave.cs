@@ -7,70 +7,91 @@ namespace GameOfLife
     /// </summary>
     public class GameSave
     {
-        public const string filePath = "GameSave.txt";
+        public const string filePath = "Saves/GameSave.txt";
+        public const string folderPath = "Saves/";
 
         /// <summary>
         /// Saves game state when it's paused and S is pressed
         /// </summary>
-        public void SaveGame(bool[, ,] gameGrid, int iteration, int aliveCellCount)
+        public void SaveGame(bool[, ,] gameGrid, int iteration, int[] aliveCellCount, int numberOfGames)
         {
-            using var swGrid = new StreamWriter(filePath);
+            FileInfo file = new FileInfo(folderPath);
+            file.Directory.Create();
 
-            swGrid.Write(iteration);
-            swGrid.Write("\n");
-            swGrid.Write(aliveCellCount);
-            swGrid.Write("\n");
-
-            for (int i = 0; i < gameGrid.GetLength(0); i++)
+            for (int k = 0; k < numberOfGames; k++)
             {
-                for (int j = 0; j < gameGrid.GetLength(1); j++)
-                {
-                    if (gameGrid[i, j, 0] == true)
-                    {
-                        swGrid.Write("█");
-                    }
-                    else
-                    {
-                        swGrid.Write(" ");
-                    }
-                }
-                swGrid.Write("\n");
-            }
+                using var swGrid = new StreamWriter(filePath.Insert(14, (k+1).ToString()));
 
-            swGrid.Flush();
-            swGrid.Close();
+                swGrid.Write(iteration);
+                swGrid.Write("\n");
+
+                swGrid.Write(aliveCellCount[k]);
+                swGrid.Write("\n");
+
+                for (int i = 0; i < gameGrid.GetLength(0); i++)
+                {
+                    for (int j = 0; j < gameGrid.GetLength(1); j++)
+                    {
+                        if (gameGrid[i, j, k] == true)
+                        {
+                            swGrid.Write("█");
+                        }
+                        else
+                        {
+                            swGrid.Write(" ");
+                        }
+                    }
+                    swGrid.Write("\n");
+                }
+
+                swGrid.Flush();
+                swGrid.Close();
+            }
+            
         }
 
         /// <summary>
         /// Loads saved game state when needed
         /// </summary>
-        public (bool[,,], int, int) ReadSaveFile()
+        public (bool[,,], int, int[]) ReadSaveFile()
         {
-            string gridInput = File.ReadAllText(filePath);
-            bool[, ,] gameGrid = new bool[gridInput.Split('\n').Length , gridInput.Split('\n')[2].Length, 1];
+            bool[,,] gameGrid;
+            string[] gridRows;
+            int iteration = 0;
 
-            var gridRows = gridInput.Split('\n');
+            DirectoryInfo dir = new DirectoryInfo("Saves/");
+            int fileCount = dir.GetFiles().Length;
+            int[] aliveCellCount = new int[fileCount];
 
-            for (int i = 2; i < gridRows.Length ; i++)
+            string gridInput = File.ReadAllText(filePath.Insert(14, 1.ToString()));
+            gameGrid = new bool[gridInput.Split('\n').Length, gridInput.Split('\n')[2].Length, fileCount];
+
+            for (int k = 0; k < fileCount; k++)
             {
-                char[] gridCol = gridRows[i].ToCharArray();
+                gridInput = File.ReadAllText(filePath.Insert(14, (k + 1).ToString()));
+                gridRows = gridInput.Split('\n');
 
-                for (int j = 0; j < gridCol.Length; j++)
+                for (int i = 2; i < gridRows.Length; i++)
                 {
-                    if (gridCol[j].ToString() == "█")
+                    char[] gridCol = gridRows[i].ToCharArray();
+
+                    for (int j = 0; j < gridCol.Length; j++)
                     {
-                        gameGrid[i, j, 0] = true;
-                    }
-                    else
-                    {
-                        gameGrid[i, j, 0] = false;
+                        if (gridCol[j].ToString() == "█")
+                        {
+                            gameGrid[i, j, k] = true;
+                        }
+                        else
+                        {
+                            gameGrid[i, j, k] = false;
+                        }
                     }
                 }
+
+                iteration = int.Parse(gridRows[0]) - 1;
+                aliveCellCount[k] = int.Parse(gridRows[1]);
             }
-
-            int iteration = int.Parse(gridRows[0]) - 1;
-            int aliveCellCount = int.Parse(gridRows[1]);
-
+           
             return (gameGrid, iteration, aliveCellCount);
         }
     }
