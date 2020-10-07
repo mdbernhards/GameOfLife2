@@ -17,6 +17,7 @@ namespace GameOfLife
         private int[] AliveCellCount { get; set; }
         private int[] LastAliveCellCount { get; set; }
         private int NumberOfGames { get; set; }
+        private int AliveGridCount { get; set; }
         private int[] SelectedGames { get; set; }
 
         public const bool AliveCell = true;
@@ -89,12 +90,12 @@ namespace GameOfLife
             LastAliveCellCount = new int[NumberOfGames];
 
             for (int i = 0; i < Height; i++)
+            {
+                for (int j = 0; j < Width; j++)
                 {
-                    for (int j = 0; j < Width; j++)
-                    {
-                        GameGrid[i, j, 0] = DeadCell;
-                    }
+                GameGrid[i, j, 0] = DeadCell;
                 }
+            }
 
             GameGrid[10, 10, 0] = AliveCell;
             GameGrid[10, 11, 0] = AliveCell;
@@ -134,6 +135,7 @@ namespace GameOfLife
         {
             NumberOfGames = gameGrid.GetLength(2);
             LastAliveCellCount = new int[NumberOfGames];
+            SelectedGames = new int[8];
 
             GameGrid = new bool[gameGrid.GetLength(0), gameGrid.GetLength(1), NumberOfGames];
             NextGameGrid = new bool[gameGrid.GetLength(0), gameGrid.GetLength(1), NumberOfGames];
@@ -170,16 +172,26 @@ namespace GameOfLife
                 uiElements.CheckForPauseOrSave(GameGrid, Iteration, LastAliveCellCount, NumberOfGames);
                 Iteration++;
 
+                if(Iteration == 1)
+                {
+                    AliveGridCount = NumberOfGames * 2;
+                }
+                else
+                {
+                    AliveGridCount = NumberOfGames;
+                }
+
+                GetAliveGrids();
                 Array.Copy(AliveCellCount, LastAliveCellCount, AliveCellCount.Length);
                 Array.Copy(NextGameGrid, GameGrid, GameGrid.Length);
 
                 if(NumberOfGames > 1)
                 {
-                    uiElements.DrawEightGrids(GameGrid, Iteration, AliveCellCount, Height, Width, SelectedGames);
+                    uiElements.DrawEightGrids(GameGrid, Iteration, AliveCellCount, Height, Width, SelectedGames, AliveGridCount);
                 }
                 else
                 {
-                    uiElements.DrawGrid(GameGrid, Iteration, AliveCellCount.Sum(), Height, Width);
+                    uiElements.DrawGrid(GameGrid, Iteration, AliveCellCount.Sum(), Height, Width, AliveGridCount);
                 }
 
                 for (int k = 0; k < NumberOfGames; k++)
@@ -264,6 +276,20 @@ namespace GameOfLife
             }
 
             return aliveNeighbors;
+        }
+
+        /// <summary>
+        /// Gets how many Alive grids there are 
+        /// </summary>
+        private void GetAliveGrids()
+        {
+            for (int i = 0; i < NumberOfGames; i++)
+            {
+                if(AliveCellCount[i] == LastAliveCellCount[i])
+                {
+                    AliveGridCount--;
+                }
+            }
         }
     }
 }

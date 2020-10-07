@@ -82,13 +82,13 @@ namespace GameOfLife
         /// <summary>
         /// Draws the grid every time it has been updated
         /// </summary>
-        public void DrawGrid(bool[, ,] gameGrid, int iteration, int aliveCellCount, int height, int width)
+        public void DrawGrid(bool[, ,] gameGrid, int iteration, int aliveCellCount, int height, int width, int aliveGridCount)
         {
             Console.Clear();
 
-            Console.WriteLine("");
             Console.WriteLine("Iteration: " + iteration);
             Console.WriteLine("Alive cell count: " + aliveCellCount);
+            Console.WriteLine("Alive Grid count: " + aliveGridCount);
             Console.WriteLine("");
             Console.WriteLine("Press Space to pause and unpause");
             Console.WriteLine("While Paused press S to save");
@@ -115,13 +115,14 @@ namespace GameOfLife
         /// <summary>
         /// Draws eight grids every time they have been updated
         /// </summary>
-        public void DrawEightGrids(bool[,,] gameGrid, int iteration, int[] aliveCellCount, int height, int width, int[] selectedGames)
+        public void DrawEightGrids(bool[,,] gameGrid, int iteration, int[] aliveCellCount, int height, int width, int[] selectedGames, int aliveGridCount)
         {
             Console.Clear();
 
             Console.WriteLine("");
             Console.WriteLine("Iteration: " + iteration);
-            Console.WriteLine("All game combined alive cell count: " + aliveCellCount.Sum());
+            Console.WriteLine("Total alive cell count: " + aliveCellCount.Sum());
+            Console.WriteLine("Alive Grid count: " + aliveGridCount);
             Console.WriteLine("");
             Console.WriteLine("Press Space to pause and unpause");
             Console.WriteLine("While Paused press S to save");

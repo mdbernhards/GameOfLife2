@@ -18,6 +18,12 @@ namespace GameOfLife
             FileInfo file = new FileInfo(folderPath);
             file.Directory.Create();
 
+            string[] filePaths = Directory.GetFiles(folderPath);
+            foreach (string filePath in filePaths)
+            {
+                File.Delete(filePath);
+            }
+
             for (int k = 0; k < numberOfGames; k++)
             {
                 using var swGrid = new StreamWriter(filePath.Insert(14, (k+1).ToString()));
