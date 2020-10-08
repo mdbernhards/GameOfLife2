@@ -7,7 +7,7 @@
     {
         static void Main(string[] args)
         {
-            UIElements menu = new UIElements();
+            GameManager menu = new GameManager();
             menu.StartMenu();
         }
     }

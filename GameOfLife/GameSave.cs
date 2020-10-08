@@ -19,26 +19,27 @@ namespace GameOfLife
             file.Directory.Create();
 
             string[] filePaths = Directory.GetFiles(folderPath);
+
             foreach (string filePath in filePaths)
             {
                 File.Delete(filePath);
             }
 
-            for (int k = 0; k < numberOfGames; k++)
+            for (int game = 0; game < numberOfGames; game++)
             {
-                using var swGrid = new StreamWriter(filePath.Insert(14, (k+1).ToString()));
+                using var swGrid = new StreamWriter(filePath.Insert(14, (game+1).ToString()));
 
                 swGrid.Write(iteration);
                 swGrid.Write("\n");
 
-                swGrid.Write(aliveCellCount[k]);
+                swGrid.Write(aliveCellCount[game]);
                 swGrid.Write("\n");
 
-                for (int i = 0; i < gameGrid.GetLength(0); i++)
+                for (int line = 0; line < gameGrid.GetLength(0); line++)
                 {
-                    for (int j = 0; j < gameGrid.GetLength(1); j++)
+                    for (int character = 0; character < gameGrid.GetLength(1); character++)
                     {
-                        if (gameGrid[i, j, k] == true)
+                        if (gameGrid[line, character, game] == true)
                         {
                             swGrid.Write("█");
                         }
@@ -54,13 +55,12 @@ namespace GameOfLife
                 swGrid.Flush();
                 swGrid.Close();
             }
-            
         }
 
         /// <summary>
         /// Loads saved game state when needed
         /// </summary>
-        public (bool[,,], int, int[]) ReadSaveFile()
+        public Game ReadSaveFile()
         {
             bool[,,] gameGrid;
             string[] gridRows;
@@ -73,33 +73,35 @@ namespace GameOfLife
             string gridInput = File.ReadAllText(filePath.Insert(14, 1.ToString()));
             gameGrid = new bool[gridInput.Split('\n').Length, gridInput.Split('\n')[2].Length, fileCount];
 
-            for (int k = 0; k < fileCount; k++)
+            for (int file = 0; file < fileCount; file++)
             {
-                gridInput = File.ReadAllText(filePath.Insert(14, (k + 1).ToString()));
+                gridInput = File.ReadAllText(filePath.Insert(14, (file + 1).ToString()));
                 gridRows = gridInput.Split('\n');
 
-                for (int i = 2; i < gridRows.Length; i++)
+                for (int line = 2; line < gridRows.Length; line++)
                 {
-                    char[] gridCol = gridRows[i].ToCharArray();
+                    char[] gridCol = gridRows[line].ToCharArray();
 
-                    for (int j = 0; j < gridCol.Length; j++)
+                    for (int character = 0; character < gridCol.Length; character++)
                     {
-                        if (gridCol[j].ToString() == "█")
+                        if (gridCol[character].ToString() == "█")
                         {
-                            gameGrid[i, j, k] = true;
+                            gameGrid[line, character, file] = true;
                         }
                         else
                         {
-                            gameGrid[i, j, k] = false;
+                            gameGrid[line, character, file] = false;
                         }
                     }
                 }
 
                 iteration = int.Parse(gridRows[0]) - 1;
-                aliveCellCount[k] = int.Parse(gridRows[1]);
+                aliveCellCount[file] = int.Parse(gridRows[1]);
             }
-           
-            return (gameGrid, iteration, aliveCellCount);
+
+            Game game = new Game(gameGrid, iteration, aliveCellCount);
+
+            return game;
         }
     }
 }
