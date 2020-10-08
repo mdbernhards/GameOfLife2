@@ -23,8 +23,6 @@ namespace GameOfLife
         public const bool AliveCell = true;
         public const bool DeadCell = false;
 
-        GameManager uiElements = new GameManager();
-
         /// <summary>
         /// Creates random start grid when it's selected from start menu
         /// </summary>
@@ -41,7 +39,7 @@ namespace GameOfLife
 
             if (NumberOfGames > 1)
             {
-                SelectedGames = uiElements.GameSelection(NumberOfGames);
+                SelectedGames = GameManager.GameSelection(NumberOfGames);
             }
             else
             {
@@ -152,7 +150,7 @@ namespace GameOfLife
 
             if (NumberOfGames > 1)
             {
-                SelectedGames = uiElements.GameSelection(NumberOfGames);
+                SelectedGames = GameManager.GameSelection(NumberOfGames);
             }
             else
             {
@@ -170,7 +168,7 @@ namespace GameOfLife
         {
             do
             {
-                uiElements.CheckForPauseOrSave(GameGrid, Iteration, LastAliveCellCount, NumberOfGames);
+                GameManager.CheckForPauseOrSave(GameGrid, Iteration, LastAliveCellCount, NumberOfGames);
                 Iteration++;
 
                 AliveGridCount = NumberOfGames;
@@ -181,11 +179,11 @@ namespace GameOfLife
 
                 if(NumberOfGames > 1)
                 {
-                    uiElements.DrawEightGrids(GameGrid, Iteration, AliveCellCount, Height, Width, SelectedGames, AliveGridCount);
+                    GameManager.DrawEightGrids(GameGrid, Iteration, AliveCellCount, Height, Width, SelectedGames, AliveGridCount);
                 }
                 else
                 {
-                    uiElements.DrawGrid(GameGrid, Iteration, AliveCellCount.Sum(), Height, Width, AliveGridCount);
+                    GameManager.DrawGrid(GameGrid, Iteration, AliveCellCount.Sum(), Height, Width, AliveGridCount);
                 }
 
                 for (int game = 0; game < NumberOfGames; game++)
@@ -304,6 +302,11 @@ namespace GameOfLife
                 {
                     AliveGridCount--;
                 }
+            }
+
+            if(Iteration == 1)
+            {
+                AliveGridCount = NumberOfGames;
             }
         }
     }

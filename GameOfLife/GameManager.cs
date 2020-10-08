@@ -51,7 +51,7 @@ namespace GameOfLife
         /// <summary>
         /// Checks if Game of Life needs to be: paused, unpaused or saved
         /// </summary>
-        public void CheckForPauseOrSave(bool[, ,] gameGrid, int iteration, int[] aliveCellCount, int numberOfGames) 
+        public static void CheckForPauseOrSave(bool[, ,] gameGrid, int iteration, int[] aliveCellCount, int numberOfGames) 
         {
             while (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Spacebar)
             {
@@ -68,7 +68,7 @@ namespace GameOfLife
 
                     if (key == ConsoleKey.S)
                     {
-                        gameSave.SaveGame(gameGrid, iteration, aliveCellCount, numberOfGames);
+                        GameSave.SaveGame(gameGrid, iteration, aliveCellCount, numberOfGames);
                         Console.WriteLine("Game Saved!");
                     }
                 } while (true);
@@ -78,7 +78,7 @@ namespace GameOfLife
         /// <summary>
         /// Draws the grid every time it has been updated
         /// </summary>
-        public void DrawGrid(bool[, ,] gameGrid, int iteration, int aliveCellCount, int height, int width, int aliveGridCount)
+        public static void DrawGrid(bool[, ,] gameGrid, int iteration, int aliveCellCount, int height, int width, int aliveGridCount)
         {
             Console.Clear();
 
@@ -115,7 +115,7 @@ namespace GameOfLife
         /// <summary>
         /// Draws eight grids every time they have been updated
         /// </summary>
-        public void DrawEightGrids(bool[,,] gameGrid, int iteration, int[] aliveCellCount, int height, int width, int[] selectedGames, int aliveGridCount)
+        public static void DrawEightGrids(bool[,,] gameGrid, int iteration, int[] aliveCellCount, int height, int width, int[] selectedGames, int aliveGridCount)
         {
             Console.Clear();
 
@@ -181,7 +181,7 @@ namespace GameOfLife
         /// <summary>
         /// Draws the name and cell count of each shown grid
         /// </summary>
-        private void DrawGridTitles(bool[,,] gameGrid, int[] aliveCellCount, int[] selectedGames, StringBuilder grids, int gridLine)
+        private static void DrawGridTitles(bool[,,] gameGrid, int[] aliveCellCount, int[] selectedGames, StringBuilder grids, int gridLine)
         {
             for (int game = 0; game < 4; game++)
             {
@@ -201,7 +201,7 @@ namespace GameOfLife
         /// <summary>
         /// UI that lets you select which grids to show, returns the grid "id's"
         /// </summary>
-        public int[] GameSelection(int numberOfGames)
+        public static int[] GameSelection(int numberOfGames)
         {
             int[] selectedGames = new int[8];
 

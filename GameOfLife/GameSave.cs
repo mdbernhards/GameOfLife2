@@ -7,13 +7,13 @@ namespace GameOfLife
     /// </summary>
     public class GameSave
     {
-        public const string filePath = "Saves/GameSave.txt";
+        public const string filePath = "Saves/GameSave.json";
         public const string folderPath = "Saves/";
 
         /// <summary>
         /// Saves game state when it's paused and S is pressed
         /// </summary>
-        public void SaveGame(bool[, ,] gameGrid, int iteration, int[] aliveCellCount, int numberOfGames)
+        public static void SaveGame(bool[, ,] gameGrid, int iteration, int[] aliveCellCount, int numberOfGames)
         {
             FileInfo file = new FileInfo(folderPath);
             file.Directory.Create();
