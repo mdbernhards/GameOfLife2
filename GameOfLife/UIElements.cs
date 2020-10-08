@@ -15,6 +15,9 @@ namespace GameOfLife
         /// </summary>
         public void StartMenu()
         {
+            Grid grid = new Grid();
+            GameSave gameSave = new GameSave();
+
             Console.WriteLine("Hello to Game of Life!");
             Console.WriteLine(" ");
             Console.WriteLine("Choose the size of field, by typing a number:");
@@ -26,8 +29,6 @@ namespace GameOfLife
             Console.WriteLine("6. Exit");
 
             string menuNuber = Console.ReadLine();
-            Grid grid = new Grid();
-            GameSave gameSave = new GameSave();
 
             switch (menuNuber)
             {
@@ -48,6 +49,10 @@ namespace GameOfLife
                     grid.CreateGridFromFile(saveInfo.Item1, saveInfo.Item2, saveInfo.Item3);
                     break;
                 case "6":
+                    break;
+                default:
+                    Console.Clear();
+                    StartMenu();
                     break;
             }
         }
@@ -193,7 +198,24 @@ namespace GameOfLife
             for (int i = 0; i < 8; i++)
             {
                 Console.Write("Game No. " + (i + 1) + ": ");
-                selectedGames[i] = Int32.Parse(Console.ReadLine()) - 1;
+
+                string number = Console.ReadLine();
+                int numberValue;
+                if (int.TryParse(number, out numberValue))
+                {
+                    if (numberValue >= 1 && numberValue <= 1000)
+                    {
+                        selectedGames[i] = numberValue - 1;
+                    }
+                    else
+                    {
+                        i--;
+                    }
+                }
+                else
+                {
+                    i--;
+                }
             }
 
             return selectedGames;

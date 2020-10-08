@@ -47,6 +47,7 @@ namespace GameOfLife
                             swGrid.Write(" ");
                         }
                     }
+
                     swGrid.Write("\n");
                 }
 
