@@ -173,14 +173,7 @@ namespace GameOfLife
                 uiElements.CheckForPauseOrSave(GameGrid, Iteration, LastAliveCellCount, NumberOfGames);
                 Iteration++;
 
-                if(Iteration == 1)
-                {
-                    AliveGridCount = NumberOfGames * 2;
-                }
-                else
-                {
-                    AliveGridCount = NumberOfGames;
-                }
+                AliveGridCount = NumberOfGames;
 
                 GetAliveGrids();
                 Array.Copy(AliveCellCount, LastAliveCellCount, AliveCellCount.Length);
@@ -284,9 +277,30 @@ namespace GameOfLife
         /// </summary>
         private void GetAliveGrids()
         {
+            bool[] gridIsDead = new bool[NumberOfGames];
+
             for (int game = 0; game < NumberOfGames; game++)
             {
-                if(AliveCellCount[game] == LastAliveCellCount[game])
+                gridIsDead[game] = true;
+            }
+
+            for (int game = 0; game < NumberOfGames; game++)
+            {
+                for (int line = 0; line < Height; line++)
+                {
+                    for (int character = 0; character < Width; character++)
+                    {
+                        if (GameGrid[line, character, game] != NextGameGrid[line, character, game])
+                        {
+                            gridIsDead[game] = false;
+                        }
+                    }
+                }
+            }
+
+            for (int game = 0; game < NumberOfGames; game++)
+            {
+                if (gridIsDead[game])
                 {
                     AliveGridCount--;
                 }
