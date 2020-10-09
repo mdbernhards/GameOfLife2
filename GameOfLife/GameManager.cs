@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Timers;
 
 namespace GameOfLife
 {
@@ -36,7 +37,7 @@ namespace GameOfLife
                     break;
                 case "5":
                     var saveInfo = gameSave.ReadSaveFile();
-                    grid.CreateGridFromFile(saveInfo.GameGrid, saveInfo.Iteration, saveInfo.AliveCellCount);
+                    grid.CreateGridFromFile(saveInfo.GameGrid, saveInfo.Iteration, saveInfo.AliveCellCount, saveInfo.AliveGridCount);
                     break;
                 case "6":
                     break;
@@ -51,10 +52,11 @@ namespace GameOfLife
         /// <summary>
         /// Checks if Game of Life needs to be: paused, unpaused or saved
         /// </summary>
-        public static void CheckForPauseOrSave(bool[, ,] gameGrid, int iteration, int[] aliveCellCount, int numberOfGames) 
+        public static void CheckForPauseOrSave(bool[, ,] gameGrid, int iteration, int[] aliveCellCount, int numberOfGames, int aliveGridCount, Timer timer) 
         {
             while (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Spacebar)
             {
+                timer.Stop();
                 Console.WriteLine("Game Paused!");
 
                 do
@@ -63,12 +65,13 @@ namespace GameOfLife
 
                     if (key == ConsoleKey.Spacebar)
                     {
+                        timer.Start();
                         break;
                     }
 
                     if (key == ConsoleKey.S)
                     {
-                        GameSave.SaveGame(gameGrid, iteration, aliveCellCount, numberOfGames);
+                        GameSave.SaveGame(gameGrid, iteration, aliveCellCount, numberOfGames, aliveGridCount);
                         Console.WriteLine("Game Saved!");
                     }
                 } while (true);

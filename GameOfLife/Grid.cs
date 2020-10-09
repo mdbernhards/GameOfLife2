@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
+using System.Timers;
 
 namespace GameOfLife
 {
@@ -18,10 +18,14 @@ namespace GameOfLife
         private int[] LastAliveCellCount { get; set; }
         private int NumberOfGames { get; set; }
         private int AliveGridCount { get; set; }
+        private int FreshAliveGridCount { get; set; }
         private int[] SelectedGames { get; set; }
+        private bool FreshGame { get; set; }
 
         public const bool AliveCell = true;
         public const bool DeadCell = false;
+
+        private static Timer aTimer;
 
         /// <summary>
         /// Creates random start grid when it's selected from start menu
@@ -128,11 +132,12 @@ namespace GameOfLife
         /// <summary>
         /// Creates the Grid and sets up all the needed variables up, when reading from save file
         /// </summary>
-        public void CreateGridFromFile(bool[, ,] gameGrid, int iteration, int[] aliveCellCount)
+        public void CreateGridFromFile(bool[, ,] gameGrid, int iteration, int[] aliveCellCount, int aliveGridCount)
         {
             NumberOfGames = gameGrid.GetLength(2);
             LastAliveCellCount = new int[NumberOfGames];
             SelectedGames = new int[8];
+            FreshGame = true;
 
             GameGrid = new bool[gameGrid.GetLength(0), gameGrid.GetLength(1), NumberOfGames];
             NextGameGrid = new bool[gameGrid.GetLength(0), gameGrid.GetLength(1), NumberOfGames];
@@ -141,6 +146,7 @@ namespace GameOfLife
 
             Iteration = iteration;
             AliveCellCount = aliveCellCount;
+            FreshAliveGridCount = aliveGridCount;
 
             Array.Copy(AliveCellCount, LastAliveCellCount, AliveCellCount.Length);
             Array.Copy(gameGrid, GameGrid, gameGrid.Length);
@@ -157,19 +163,29 @@ namespace GameOfLife
 
             SetUpdateTimer();
         }
+
+        /// <summary>
+        /// Sets up the timer that calls UpdateGrid method every second
+        /// </summary>
         public void SetUpdateTimer()
         {
-            Timer t = new Timer(UpdateGrid, null, 0, 1000);
+            aTimer = new Timer(1000); 
+            aTimer.Elapsed += UpdateGrid;
+            aTimer.AutoReset = true;
+            aTimer.Enabled = true;
 
-            while (true){}
+            while (true)
+            {
+
+            }
         }
 
         /// <summary>
-        /// Updates the grid every second, calls methods that check if cells are alive or dead
+        /// Updates the grid, calls methods that check if cells are alive or dead
         /// </summary>
-        public void UpdateGrid(Object o)
+        public void UpdateGrid(Object source, ElapsedEventArgs e)
         {
-            GameManager.CheckForPauseOrSave(GameGrid, Iteration, LastAliveCellCount, NumberOfGames);
+            GameManager.CheckForPauseOrSave(GameGrid, Iteration, LastAliveCellCount, NumberOfGames, AliveGridCount, aTimer);
 
             Iteration++;
             AliveGridCount = NumberOfGames;
@@ -301,9 +317,14 @@ namespace GameOfLife
                 }
             }
 
-            if(Iteration == 1)
+            if (Iteration == 1)
             {
                 AliveGridCount = NumberOfGames;
+            }
+            else if(FreshGame == true)
+            {
+                AliveGridCount = FreshAliveGridCount;
+                FreshGame = false;
             }
         }
     }

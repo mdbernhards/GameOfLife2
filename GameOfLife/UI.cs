@@ -22,6 +22,8 @@ namespace GameOfLife
             menu.AppendLine("6. Exit");
 
             Console.WriteLine(menu);
+
+            Console.Write("Enter number: ");
             string menuNuber = Console.ReadLine();
             return menuNuber;
         }

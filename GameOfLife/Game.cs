@@ -10,11 +10,14 @@ namespace GameOfLife
         public int Iteration { get; set; }
         public int[] AliveCellCount { get; set; }
 
-        public Game(bool[,,] gameGrid, int iteration, int[] aliveCellCount)
+        public int AliveGridCount { get; set; }
+
+        public Game(bool[,,] gameGrid, int iteration, int[] aliveCellCount, int aliveGridCount)
         {
             GameGrid = gameGrid;
             Iteration = iteration;
             AliveCellCount = aliveCellCount;
+            AliveGridCount = aliveGridCount;
         }
     }
 }
