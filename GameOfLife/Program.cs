@@ -8,7 +8,7 @@
         static void Main(string[] args)
         {
             GameManager menu = new GameManager();
-            menu.StartMenu();
+            menu.StartTheMenu();
         }
     }
 }

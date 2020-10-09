@@ -43,7 +43,7 @@ namespace GameOfLife
 
             if (NumberOfGames > 1)
             {
-                SelectedGames = GameManager.GameSelection(NumberOfGames);
+                SelectedGames = Menus.DisplayGameSelection(NumberOfGames);
             }
             else
             {
@@ -154,7 +154,7 @@ namespace GameOfLife
 
             if (NumberOfGames > 1)
             {
-                SelectedGames = GameManager.GameSelection(NumberOfGames);
+                SelectedGames = Menus.DisplayGameSelection(NumberOfGames);
             }
             else
             {
