@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace GameOfLife
@@ -20,7 +19,6 @@ namespace GameOfLife
             menu.AppendLine("4. 1000 games in paralel");
             menu.AppendLine("5. Load last saved game");
             menu.AppendLine("6. Exit");
-
             Console.WriteLine(menu);
 
             Console.Write("Enter number: ");

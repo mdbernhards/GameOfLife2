@@ -47,12 +47,10 @@ namespace GameOfLife
             }
         }
 
-        
-
         /// <summary>
         /// Checks if Game of Life needs to be: paused, unpaused or saved
         /// </summary>
-        public static void CheckForPauseOrSave(bool[, ,] gameGrid, int iteration, int[] aliveCellCount, int numberOfGames, int aliveGridCount, Timer timer) 
+        public static void CheckForPauseOrSave(bool[, ,] gameGrid, int iteration, int[] aliveCellCount, int aliveGridCount, Timer timer) 
         {
             while (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Spacebar)
             {
@@ -71,7 +69,7 @@ namespace GameOfLife
 
                     if (key == ConsoleKey.S)
                     {
-                        GameSave.SaveGame(gameGrid, iteration, aliveCellCount, numberOfGames, aliveGridCount);
+                        GameSave.SaveGame(gameGrid, iteration, aliveCellCount, aliveGridCount);
                         Console.WriteLine("Game Saved!");
                     }
                 } while (true);

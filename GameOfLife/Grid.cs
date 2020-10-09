@@ -185,7 +185,7 @@ namespace GameOfLife
         /// </summary>
         public void UpdateGrid(Object source, ElapsedEventArgs e)
         {
-            GameManager.CheckForPauseOrSave(GameGrid, Iteration, LastAliveCellCount, NumberOfGames, AliveGridCount, aTimer);
+            GameManager.CheckForPauseOrSave(GameGrid, Iteration, LastAliveCellCount, AliveGridCount, aTimer);
 
             Iteration++;
             AliveGridCount = NumberOfGames;

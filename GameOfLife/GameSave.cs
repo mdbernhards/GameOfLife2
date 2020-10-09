@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿using Newtonsoft.Json;
+using System.IO;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace GameOfLife
 {
@@ -11,10 +15,12 @@ namespace GameOfLife
         public const string folderPath = "Saves/";
 
         /// <summary>
-        /// Saves game state when it's paused and S is pressed
+        /// Saves game state when called
         /// </summary>
-        public static void SaveGame(bool[, ,] gameGrid, int iteration, int[] aliveCellCount, int numberOfGames, int aliveGridCount)
+        public static void SaveGame(bool[, ,] gameGrid, int iteration, int[] aliveCellCount, int aliveGridCount)
         {
+            StringBuilder gridString = new StringBuilder();
+
             FileInfo file = new FileInfo(folderPath);
             file.Directory.Create();
 
@@ -25,86 +31,16 @@ namespace GameOfLife
                 File.Delete(filePath);
             }
 
-            for (int game = 0; game < numberOfGames; game++)
-            {
-                using var swGrid = new StreamWriter(filePath.Insert(14, (game+1).ToString()));
-
-                swGrid.Write(iteration);
-                swGrid.Write("\n");
-
-                swGrid.Write(aliveCellCount[game]);
-                swGrid.Write("\n");
-
-                swGrid.Write(aliveGridCount);
-                swGrid.Write("\n");
-
-                for (int line = 0; line < gameGrid.GetLength(0); line++)
-                {
-                    for (int character = 0; character < gameGrid.GetLength(1); character++)
-                    {
-                        if (gameGrid[line, character, game] == true)
-                        {
-                            swGrid.Write("█");
-                        }
-                        else
-                        {
-                            swGrid.Write(" ");
-                        }
-                    }
-
-                    swGrid.Write("\n");
-                }
-
-                swGrid.Flush();
-                swGrid.Close();
-            }
+            Game game = new Game(gameGrid, iteration - 1, aliveCellCount, aliveGridCount);
+            File.WriteAllText(filePath, JsonConvert.SerializeObject(game));
         }
 
         /// <summary>
-        /// Loads saved game state when needed
+        /// Loads and returns saved game state when called
         /// </summary>
         public Game ReadSaveFile()
         {
-            bool[,,] gameGrid;
-            string[] gridRows;
-            int iteration = 0;
-            int aliveGridCount = 0;
-
-            DirectoryInfo dir = new DirectoryInfo("Saves/");
-            int fileCount = dir.GetFiles().Length;
-            int[] aliveCellCount = new int[fileCount];
-
-            string gridInput = File.ReadAllText(filePath.Insert(14, 1.ToString()));
-            gameGrid = new bool[gridInput.Split('\n').Length -3, gridInput.Split('\n')[3].Length, fileCount];
-
-            for (int file = 0; file < fileCount; file++)
-            {
-                gridInput = File.ReadAllText(filePath.Insert(14, (file + 1).ToString()));
-                gridRows = gridInput.Split('\n');
-
-                for (int line = 3; line < gridRows.Length; line++)
-                {
-                    char[] gridCol = gridRows[line].ToCharArray();
-
-                    for (int character = 0; character < gridCol.Length; character++)
-                    {
-                        if (gridCol[character].ToString() == "█")
-                        {
-                            gameGrid[line - 3, character, file] = true;
-                        }
-                        else
-                        {
-                            gameGrid[line - 3, character, file] = false;
-                        }
-                    }
-                }
-
-                iteration = int.Parse(gridRows[0]) - 1;
-                aliveCellCount[file] = int.Parse(gridRows[1]);
-                aliveGridCount = int.Parse(gridRows[2]);
-            }
-
-            Game game = new Game(gameGrid, iteration, aliveCellCount, aliveGridCount);
+            Game game = JsonConvert.DeserializeObject<Game>(File.ReadAllText(filePath));
             return game;
         }
     }
