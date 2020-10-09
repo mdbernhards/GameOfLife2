@@ -100,7 +100,6 @@ namespace GameOfLife
             }
 
             Game game = new Game(gameGrid, iteration, aliveCellCount);
-
             return game;
         }
     }

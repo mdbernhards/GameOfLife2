@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace GameOfLife
 {
@@ -70,8 +70,7 @@ namespace GameOfLife
             Array.Copy(AliveCellCount, LastAliveCellCount, AliveCellCount.Length);
             Array.Copy(GameGrid, NextGameGrid, GameGrid.Length);
 
-            var task = UpdateGrid();
-            task.Wait();
+            SetUpdateTimer();
         }
 
         /// <summary>
@@ -123,8 +122,7 @@ namespace GameOfLife
             Array.Copy(AliveCellCount, LastAliveCellCount, AliveCellCount.Length);
             Array.Copy(GameGrid, NextGameGrid, GameGrid.Length);
 
-            var task = UpdateGrid();
-            task.Wait();
+            SetUpdateTimer();
         }
 
         /// <summary>
@@ -157,56 +155,55 @@ namespace GameOfLife
                 SelectedGames[0] = 1;
             }
 
-            var task = UpdateGrid();
-            task.Wait();
+            SetUpdateTimer();
+        }
+        public void SetUpdateTimer()
+        {
+            Timer t = new Timer(UpdateGrid, null, 0, 1000);
+
+            while (true){}
         }
 
         /// <summary>
         /// Updates the grid every second, calls methods that check if cells are alive or dead
         /// </summary>
-        public async Task UpdateGrid()
+        public void UpdateGrid(Object o)
         {
-            do
+            GameManager.CheckForPauseOrSave(GameGrid, Iteration, LastAliveCellCount, NumberOfGames);
+
+            Iteration++;
+            AliveGridCount = NumberOfGames;
+
+            GetAliveGrids();
+            Array.Copy(AliveCellCount, LastAliveCellCount, AliveCellCount.Length);
+            Array.Copy(NextGameGrid, GameGrid, GameGrid.Length);
+
+            if (NumberOfGames > 1)
             {
-                GameManager.CheckForPauseOrSave(GameGrid, Iteration, LastAliveCellCount, NumberOfGames);
-                Iteration++;
+                GameManager.DrawEightGrids(GameGrid, Iteration, AliveCellCount, Height, Width, SelectedGames, AliveGridCount);
+            }
+            else
+            {
+                GameManager.DrawGrid(GameGrid, Iteration, AliveCellCount.Sum(), Height, Width, AliveGridCount);
+            }
 
-                AliveGridCount = NumberOfGames;
-
-                GetAliveGrids();
-                Array.Copy(AliveCellCount, LastAliveCellCount, AliveCellCount.Length);
-                Array.Copy(NextGameGrid, GameGrid, GameGrid.Length);
-
-                if(NumberOfGames > 1)
+            for (int game = 0; game < NumberOfGames; game++)
+            {
+                for (int line = 0; line < Height; line++)
                 {
-                    GameManager.DrawEightGrids(GameGrid, Iteration, AliveCellCount, Height, Width, SelectedGames, AliveGridCount);
-                }
-                else
-                {
-                    GameManager.DrawGrid(GameGrid, Iteration, AliveCellCount.Sum(), Height, Width, AliveGridCount);
-                }
-
-                for (int game = 0; game < NumberOfGames; game++)
-                {
-                    for (int line = 0; line < Height; line++)
+                    for (int character = 0; character < Width; character++)
                     {
-                        for (int character = 0; character < Width; character++)
+                        if (GameGrid[line, character, game] == AliveCell)
                         {
-                            if (GameGrid[line, character, game] == AliveCell)
-                            {
-                                CheckIfCellAlive(line, character, true, game);
-                            }
-                            else
-                            {
-                                CheckIfCellAlive(line, character, false, game);
-                            }
+                            CheckIfCellAlive(line, character, true, game);
+                        }
+                        else
+                        {
+                            CheckIfCellAlive(line, character, false, game);
                         }
                     }
                 }
-
-                await Task.Delay(1000);
-
-            } while (true);
+            }
         }
 
         /// <summary>
