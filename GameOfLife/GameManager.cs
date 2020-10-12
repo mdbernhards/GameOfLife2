@@ -1,4 +1,6 @@
-﻿namespace GameOfLife
+﻿using System;
+
+namespace GameOfLife
 {
     /// <summary>
     /// Has the Start menu logic
@@ -8,6 +10,16 @@
         private GameSave gameSave { get; set; }
         private Menus menus { get; set; }
         private Grid grid { get; set; }
+
+        enum MenuItems 
+        { 
+            SmallGrid = 1,
+            BigGrid = 2,
+            CustomGrid = 3,
+            ThousandGrids = 4,
+            LoadFromFile = 5,
+            Exit = 6
+        };
 
         public GameManager()
         {
@@ -22,26 +34,27 @@
         public void StartTheMenu()
         {
             string menuNuber = menus.DisplayMenu();
+            Enum.TryParse(menuNuber, result: out MenuItems menuItems);
 
-            switch (menuNuber)
+            switch (menuItems)
             {
-                case "1":
+                case MenuItems.SmallGrid:
                     grid.CreateGrids(30, 60, 1); //height, width, number of games in paralel
                     break;
-                case "2":
+                case MenuItems.BigGrid:
                     grid.CreateGrids(40, 80, 1);
                     break;
-                case "3":
+                case MenuItems.CustomGrid:
                     grid.CreateCustomGrid(30, 30);
                     break;
-                case "4":
+                case MenuItems.ThousandGrids:
                     grid.CreateGrids(18, 40, 1000);
                     break;
-                case "5":
+                case MenuItems.LoadFromFile:
                     var saveInfo = gameSave.ReadSaveFile();
                     grid.CreateGridFromFile(saveInfo.GameGrid, saveInfo.Iteration, saveInfo.AliveCellCount, saveInfo.AliveGridCount);
                     break;
-                case "6":
+                case MenuItems.Exit:
                     break;
                 default:
                     StartTheMenu();

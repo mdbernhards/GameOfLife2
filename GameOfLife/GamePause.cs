@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Timers;
-using System.Text;
 
 namespace GameOfLife
 {
@@ -10,10 +9,12 @@ namespace GameOfLife
     public class GamePause
     {
         private Menus menu;
+        private GameSave gameSave;
 
         public GamePause()
         {
             menu = new Menus();
+            gameSave = new GameSave();
         }
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace GameOfLife
 
                     if (key == ConsoleKey.S)
                     {
-                        GameSave.SaveGame(gameGrid, iteration, aliveCellCount, aliveGridCount);
+                        gameSave.SaveGame(gameGrid, iteration, aliveCellCount, aliveGridCount);
                         menu.DisplayOutput("Game Saved!");
                     }
                 } while (true);

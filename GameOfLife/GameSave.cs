@@ -14,7 +14,7 @@ namespace GameOfLife
         /// <summary>
         /// Saves game state when called
         /// </summary>
-        public static void SaveGame(bool[, ,] gameGrid, int iteration, int[] aliveCellCount, int aliveGridCount)
+        public void SaveGame(bool[, ,] gameGrid, int iteration, int[] aliveCellCount, int aliveGridCount)
         {
             FileInfo file = new FileInfo(folderPath);
             file.Directory.Create();
