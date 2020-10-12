@@ -21,11 +21,21 @@ namespace GameOfLife
         private int FreshAliveGridCount { get; set; }
         private int[] SelectedGames { get; set; }
         private bool FreshGame { get; set; }
+        private static Timer UpdateTimer { get; set; }
+        private Menus menus { get; set; }
+        private GamePause gamePause { get; set; }
 
         public const bool AliveCell = true;
         public const bool DeadCell = false;
 
-        private static Timer aTimer;
+        /// <summary>
+        /// Constructor to create the object with all the necessary information
+        /// </summary>
+        public Grid()
+        {
+            menus = new Menus();
+            gamePause = new GamePause();
+        }
 
         /// <summary>
         /// Creates random start grid when it's selected from start menu
@@ -43,7 +53,7 @@ namespace GameOfLife
 
             if (NumberOfGames > 1)
             {
-                SelectedGames = Menus.DisplayGameSelection(NumberOfGames);
+                SelectedGames = menus.DisplayGameSelection(NumberOfGames);
             }
             else
             {
@@ -154,7 +164,7 @@ namespace GameOfLife
 
             if (NumberOfGames > 1)
             {
-                SelectedGames = Menus.DisplayGameSelection(NumberOfGames);
+                SelectedGames = menus.DisplayGameSelection(NumberOfGames);
             }
             else
             {
@@ -169,15 +179,15 @@ namespace GameOfLife
         /// </summary>
         public void SetUpdateTimer()
         {
-            aTimer = new Timer(1000); 
-            aTimer.Elapsed += UpdateGrid;
-            aTimer.AutoReset = true;
-            aTimer.Enabled = true;
+            UpdateTimer = new Timer(1000); 
+            UpdateTimer.Elapsed += UpdateGrid;
+            UpdateTimer.AutoReset = true;
+            UpdateTimer.Enabled = true;
 
-            while (true)
-            {
-
-            }
+            /// <summary>
+            /// Infinite loop so the program doesn't stop
+            /// </summary>
+            while (true){}
         }
 
         /// <summary>
@@ -185,7 +195,7 @@ namespace GameOfLife
         /// </summary>
         public void UpdateGrid(Object source, ElapsedEventArgs e)
         {
-            GameManager.CheckForPauseOrSave(GameGrid, Iteration, LastAliveCellCount, AliveGridCount, aTimer);
+            gamePause.CheckForPauseOrSave(GameGrid, Iteration, LastAliveCellCount, AliveGridCount, UpdateTimer);
 
             Iteration++;
             AliveGridCount = NumberOfGames;
@@ -196,11 +206,11 @@ namespace GameOfLife
 
             if (NumberOfGames > 1)
             {
-                GameManager.DrawEightGrids(GameGrid, Iteration, AliveCellCount, Height, Width, SelectedGames, AliveGridCount);
+                menus.DrawEightGrids(GameGrid, Iteration, AliveCellCount, Height, Width, SelectedGames, AliveGridCount);
             }
             else
             {
-                GameManager.DrawGrid(GameGrid, Iteration, AliveCellCount.Sum(), Height, Width, AliveGridCount);
+                menus.DrawGrid(GameGrid, Iteration, AliveCellCount.Sum(), Height, Width, AliveGridCount);
             }
 
             for (int game = 0; game < NumberOfGames; game++)
@@ -261,7 +271,6 @@ namespace GameOfLife
         private int GetAliveNeighbors(int height, int width, int gameNumber)
         {
             int aliveNeighbors = 0;
-
             int[,] neighbors = new int[,] { { -1, -1 }, { 0, -1 }, { 1, -1 }, 
                                             { -1,  0 },            { 1,  0 },
                                             { -1,  1 }, { 0,  1 }, { 1,  1 }, };

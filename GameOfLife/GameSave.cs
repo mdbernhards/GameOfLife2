@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
-using System.Text;
 
 namespace GameOfLife
 {
@@ -17,8 +16,6 @@ namespace GameOfLife
         /// </summary>
         public static void SaveGame(bool[, ,] gameGrid, int iteration, int[] aliveCellCount, int aliveGridCount)
         {
-            StringBuilder gridString = new StringBuilder();
-
             FileInfo file = new FileInfo(folderPath);
             file.Directory.Create();
 

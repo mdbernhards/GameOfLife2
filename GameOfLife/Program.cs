@@ -1,11 +1,14 @@
 ﻿namespace GameOfLife
 {
     /// <summary>
-    /// Starts the program, menu
+    /// Main programs class, starts the programs menu
     /// </summary>
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        /// <summary>
+        /// Starts the program, by creating a menu object and displaying it
+        /// </summary>
+        public static void Main(string[] args)
         {
             GameManager menu = new GameManager();
             menu.StartTheMenu();
