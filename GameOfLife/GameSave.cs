@@ -6,7 +6,7 @@ namespace GameOfLife
     /// <summary>
     /// Saves and loads saved Game of Life state
     /// </summary>
-    public class GameSave
+    public class GameSave : IGameSave
     {
         public const string filePath = "Saves/GameSave.json";
         public const string folderPath = "Saves/";

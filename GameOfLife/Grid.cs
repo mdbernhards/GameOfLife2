@@ -11,11 +11,11 @@ namespace GameOfLife
     {
         private int Height { get; set; }
         private int Width { get; set; }
-        private bool[, ,] GameGrid { get; set; }
+        public bool[, ,] GameGrid { get; set; }
         public bool[, ,] NextGameGrid { get; set; }
         private int Iteration { get; set; }
-        private int[] AliveCellCount { get; set; }
-        private int[] LastAliveCellCount { get; set; }
+        public int[] AliveCellCount { get; set; }
+        public int[] LastAliveCellCount { get; set; }
         private int NumberOfGames { get; set; }
         private int AliveGridCount { get; set; }
         private int FreshAliveGridCount { get; set; }
@@ -105,7 +105,7 @@ namespace GameOfLife
             {
                 for (int character = 0; character < Width; character++)
                 {
-                GameGrid[line, character, 0] = DeadCell;
+                    GameGrid[line, character, 0] = DeadCell;
                 }
             }
 

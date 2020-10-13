@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameOfLife.Interfaces;
+using System;
 using System.Linq;
 using System.Text;
 
@@ -8,7 +9,7 @@ namespace GameOfLife
     /// <summary>
     /// Class for displaying or drawing UI, methods are called when there is need for program output
     /// </summary>
-    public class Menus
+    public class Menus : IMenus
     {
         /// <summary>
         /// Displays the game selection menu asks to enter one of the menu items and returns it
@@ -81,7 +82,7 @@ namespace GameOfLife
         /// <summary>
         /// Draws the grid every time it has been updated
         /// </summary>
-        public void DrawGrid(bool[,,] gameGrid, int iteration, int aliveCellCount, int height, int width, int aliveGridCount)
+        public virtual void DrawGrid(bool[,,] gameGrid, int iteration, int aliveCellCount, int height, int width, int aliveGridCount)
         {
             Console.Clear();
 

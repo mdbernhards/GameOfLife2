@@ -9,3 +9,5 @@
 /GameOfLifeUnitTests/Properties
 /GameOfLifeUnitTests/packages.config
 /packages
+/GameOfLifeUnitTests/bin/Debug/netcoreapp3.1
+/GameOfLifeUnitTests/obj
