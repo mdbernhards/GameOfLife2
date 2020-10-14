@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GameOfLife
+﻿namespace GameOfLife
 {
+    /// <summary>
+    /// Interface for class that saves and loads Game of Life
+    /// </summary>
     public interface IGameSave
     {
         public Game ReadSaveFile();

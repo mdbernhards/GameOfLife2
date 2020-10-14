@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
 namespace GameOfLife.Interfaces
 {
+    /// <summary>
+    /// Interface for class that displays or draws UI, methods are called when there is need for program output
+    /// </summary>
     public interface IMenus
     {
         public string DisplayMenu();

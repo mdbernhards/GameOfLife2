@@ -12,6 +12,9 @@ namespace GameOfLife
         private IMenus menu;
         private GameSave gameSave;
 
+        /// <summary>
+        /// Constuctor that creates objects for GamePause class
+        /// </summary>
         public GamePause()
         {
             menu = new Menus();

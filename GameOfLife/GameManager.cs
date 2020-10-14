@@ -12,6 +12,9 @@ namespace GameOfLife
         private IMenus menus { get; set; }
         private Grid grid { get; set; }
 
+        /// <summary>
+        /// Enum for menu
+        /// </summary>
         enum MenuItems 
         { 
             SmallGrid = 1,
@@ -22,6 +25,9 @@ namespace GameOfLife
             Exit = 6
         };
 
+        /// <summary>
+        /// Constuctor that creates objects for GameManager class
+        /// </summary>
         public GameManager()
         {
             gameSave = new GameSave();

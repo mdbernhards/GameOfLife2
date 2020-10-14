@@ -1,5 +1,4 @@
-﻿using GameOfLife.Interfaces;
-using System;
+﻿using System;
 using System.Linq;
 using System.Text;
 
@@ -7,7 +6,7 @@ namespace GameOfLife
 {
 
     /// <summary>
-    /// Class for displaying or drawing UI, methods are called when there is need for program output
+    /// Class that displays or draws UI, methods are called when there is need for program output
     /// </summary>
     public class Menus : Interfaces.IMenus
     {

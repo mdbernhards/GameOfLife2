@@ -5,7 +5,7 @@ using System.IO.Abstractions;
 namespace GameOfLife
 {
     /// <summary>
-    /// Saves and loads saved Game of Life state
+    /// Class that saves and loads Game of Life
     /// </summary>
     public class GameSave : IGameSave
     {

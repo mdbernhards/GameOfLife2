@@ -30,7 +30,7 @@ namespace GameOfLife
         public const bool DeadCell = false;
 
         /// <summary>
-        /// Constructor to create the object with all the necessary information
+        /// Constructor to create needed objects
         /// </summary>
         public Grid()
         {
@@ -38,6 +38,9 @@ namespace GameOfLife
             Pause = new GamePause();
         }
 
+        /// <summary>
+        /// Constructor to create the object with all the necessary information
+        /// </summary>
         public Grid(IMenus menu, IGamePause gamePause, int numberOfGames, int height, int width)
         {
             Menu = menu;
