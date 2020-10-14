@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameOfLife.Interfaces;
+using System;
 
 namespace GameOfLife
 {
@@ -8,7 +9,7 @@ namespace GameOfLife
     public class GameManager
     {
         private GameSave gameSave { get; set; }
-        private Menus menus { get; set; }
+        private IMenus menus { get; set; }
         private Grid grid { get; set; }
 
         enum MenuItems 

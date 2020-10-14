@@ -8,14 +8,12 @@ namespace GameOfLifeUnitTests
     public class GameSaveUnitTests
     {
         [Fact]
-        public void Test1()
+        public void LoadGameUnitTest()
         {
             Grid grid = new Grid();
 
             bool[,,] GameGrid = new bool[5, 5, 1];
-            
             int[] aliveCellCount = new int[1];
-
             aliveCellCount[0] = 20;
 
             Game game = new Game(GameGrid, 3, aliveCellCount, 1);
@@ -27,8 +25,6 @@ namespace GameOfLifeUnitTests
             //grid.CreateGridFromFile(saveInfo.GameGrid, saveInfo.Iteration, saveInfo.AliveCellCount, saveInfo.AliveGridCount);
 
             gameSaveMock.Setup(save => save.ReadSaveFile()).Returns(game);
-
-            
         }
     }
 }

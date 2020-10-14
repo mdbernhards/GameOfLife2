@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameOfLife.Interfaces;
+using System;
 using System.Timers;
 
 namespace GameOfLife
@@ -6,9 +7,9 @@ namespace GameOfLife
     /// <summary>
     /// Class for pausing and saving
     /// </summary>
-    public class GamePause
+    public class GamePause : IGamePause
     {
-        private Menus menu;
+        private IMenus menu;
         private GameSave gameSave;
 
         public GamePause()

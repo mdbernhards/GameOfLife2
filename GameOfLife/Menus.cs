@@ -9,7 +9,7 @@ namespace GameOfLife
     /// <summary>
     /// Class for displaying or drawing UI, methods are called when there is need for program output
     /// </summary>
-    public class Menus : IMenus
+    public class Menus : Interfaces.IMenus
     {
         /// <summary>
         /// Displays the game selection menu asks to enter one of the menu items and returns it
@@ -145,7 +145,7 @@ namespace GameOfLife
         /// <summary>
         /// Draws a row of 4 grids
         /// </summary>
-        private void DrawARowOfGrids(bool[,,] gameGrid, int height, int width, int[] selectedGames, StringBuilder grids, int gridRow)
+        public void DrawARowOfGrids(bool[,,] gameGrid, int height, int width, int[] selectedGames, StringBuilder grids, int gridRow)
         {
             for (int line = 0; line < height; line++)
             {
@@ -185,7 +185,7 @@ namespace GameOfLife
         /// <summary>
         /// Draws the name and cell count of each shown grid
         /// </summary>
-        private void DrawGridTitles(bool[,,] gameGrid, int[] aliveCellCount, int[] selectedGames, StringBuilder grids, int gridLine)
+        public void DrawGridTitles(bool[,,] gameGrid, int[] aliveCellCount, int[] selectedGames, StringBuilder grids, int gridLine)
         {
             for (int game = 0; game < 4; game++)
             {
