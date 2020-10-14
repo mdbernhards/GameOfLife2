@@ -9,83 +9,74 @@ namespace GameOfLifeUnitTests
 {
     public class GridUnitTests
     {
-        public Mock<IMenus> menusMock = new Mock<IMenus>();
-        public Mock<IGamePause> gamePauseMock = new Mock<IGamePause>();
+        private Mock<IMenus> menusMock = new Mock<IMenus>();
+        private Mock<IGamePause> gamePauseMock = new Mock<IGamePause>();
+
+        private Grid grid;
+        private bool[,,] GameGrid;
+
+        private void SetUp()
+        {
+            menusMock.Setup(menus => menus.DrawGrid(It.IsAny<bool[,,]>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Verifiable();
+            gamePauseMock.Setup(pause => pause.CheckForPauseOrSave(It.IsAny<bool[,,]>(), It.IsAny<int>(), It.IsAny<int[]>(), It.IsAny<int>(), It.IsAny<Timer>())).Verifiable();
+
+            grid = new Grid(menusMock.Object, gamePauseMock.Object, 1, 5, 5)
+            {
+                AliveCellCount = new int[1],
+                LastAliveCellCount = new int[1],
+                GameGrid = new bool[5, 5, 1],
+                NextGameGrid = new bool[5, 5, 1]
+            };
+
+            GameGrid = new bool[5, 5, 1];
+            for (int line = 0; line < GameGrid.GetLength(0); line++)
+            {
+                for (int character = 0; character < GameGrid.GetLength(1); character++)
+                {
+                    GameGrid[line, character, 0] = false;
+                }
+            }
+        }
 
         [Fact]
         public void UpdateGridTestMovingShape()
         {
-            menusMock.Setup(menus => menus.DrawGrid(It.IsAny<bool[,,]>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Verifiable();
-            gamePauseMock.Setup(pause => pause.CheckForPauseOrSave(It.IsAny<bool[,,]>(), It.IsAny<int>(), It.IsAny<int[]>(), It.IsAny<int>(), It.IsAny<Timer>()));
+            SetUp();
 
-            var grid = new Grid(menusMock.Object, gamePauseMock.Object, 1, 5, 5);
-            grid.AliveCellCount = new int[1];
-            grid.LastAliveCellCount = new int[1];
-            //grid
+            GameGrid[1, 3, 0] = true;
+            GameGrid[2, 3, 0] = true;
+            GameGrid[3, 3, 0] = true;
 
-            grid.GameGrid = new bool[5, 5, 1];
-            grid.NextGameGrid = new bool[5, 5, 1];
-            bool[,,] gameGrid = new bool[5, 5, 1];
-
-            for (int line = 0; line < gameGrid.GetLength(0); line++)
-            {
-                for (int character = 0; character < gameGrid.GetLength(1); character++)
-                {
-                    gameGrid[line, character, 0] = false;
-                }
-            }
-
-            gameGrid[1, 3, 0] = true;
-            gameGrid[2, 3, 0] = true;
-            gameGrid[3, 3, 0] = true;
-
-            Array.Copy(gameGrid, grid.GameGrid, gameGrid.Length);
-            Array.Copy(gameGrid, grid.NextGameGrid, gameGrid.Length);
+            Array.Copy(GameGrid, grid.GameGrid, GameGrid.Length);
+            Array.Copy(GameGrid, grid.NextGameGrid, GameGrid.Length);
 
             grid.UpdateGrid(null, null);
 
-            gameGrid[1, 3, 0] = false;
-            gameGrid[3, 3, 0] = false;
-            gameGrid[2, 2, 0] = true;
-            gameGrid[2, 4, 0] = true;
+            GameGrid[1, 3, 0] = false;
+            GameGrid[3, 3, 0] = false;
+            GameGrid[2, 2, 0] = true;
+            GameGrid[2, 4, 0] = true;
 
-            Assert.Equal(gameGrid, grid.NextGameGrid);
+            Assert.Equal(GameGrid, grid.NextGameGrid);
             Mock.VerifyAll();
         }
 
+        [Fact]
         public void UpdateGridTestStaticShape()
         {
-            menusMock.Setup(menus => menus.DrawGrid(It.IsAny<bool[,,]>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Verifiable();
-            gamePauseMock.Setup(pause => pause.CheckForPauseOrSave(It.IsAny<bool[,,]>(), It.IsAny<int>(), It.IsAny<int[]>(), It.IsAny<int>(), It.IsAny<Timer>()));
+            SetUp();
 
-            var grid = new Grid(menusMock.Object, gamePauseMock.Object, 1, 5, 5);
-            grid.AliveCellCount = new int[1];
-            grid.LastAliveCellCount = new int[1];
-            //grid
+            GameGrid[2, 2, 0] = true;
+            GameGrid[2, 3, 0] = true;
+            GameGrid[3, 3, 0] = true;
+            GameGrid[3, 2, 0] = true;
 
-            grid.GameGrid = new bool[5, 5, 1];
-            grid.NextGameGrid = new bool[5, 5, 1];
-            bool[,,] gameGrid = new bool[5, 5, 1];
-
-            for (int line = 0; line < gameGrid.GetLength(0); line++)
-            {
-                for (int character = 0; character < gameGrid.GetLength(1); character++)
-                {
-                    gameGrid[line, character, 0] = false;
-                }
-            }
-
-            gameGrid[2, 2, 0] = true;
-            gameGrid[2, 3, 0] = true;
-            gameGrid[3, 3, 0] = true;
-            gameGrid[3, 2, 0] = true;
-
-            Array.Copy(gameGrid, grid.GameGrid, gameGrid.Length);
-            Array.Copy(gameGrid, grid.NextGameGrid, gameGrid.Length);
+            Array.Copy(GameGrid, grid.GameGrid, GameGrid.Length);
+            Array.Copy(GameGrid, grid.NextGameGrid, GameGrid.Length);
 
             grid.UpdateGrid(null, null);
 
-            Assert.Equal(gameGrid, grid.NextGameGrid);
+            Assert.Equal(GameGrid, grid.NextGameGrid);
             Mock.VerifyAll();
         }
     }

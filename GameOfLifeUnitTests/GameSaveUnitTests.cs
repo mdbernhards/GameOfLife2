@@ -1,30 +1,54 @@
-using Moq;
-using System;
 using Xunit;
 using GameOfLife;
+using System.IO.Abstractions.TestingHelpers;
+using System.Collections.Generic;
 
 namespace GameOfLifeUnitTests
 {
     public class GameSaveUnitTests
     {
+        private bool[,,] Grid;
+        private Game TestGame;
+
+        private void SetUp()
+        {
+            Grid = new bool[5, 5, 1];
+
+            for (int line = 0; line < Grid.GetLength(0); line++)
+            {
+                for (int character = 0; character < Grid.GetLength(1); character++)
+                {
+                    Grid[line, character, 0] = false;
+                }
+            }
+
+            Grid[1, 3, 0] = true;
+            Grid[2, 3, 0] = true;
+            Grid[3, 3, 0] = true;
+
+            int[] aliveCellCount = { 3 };
+            TestGame = new Game(Grid, 2, aliveCellCount, 1);
+        }
+
         [Fact]
         public void LoadGameUnitTest()
         {
-            Grid grid = new Grid();
+            string jsonData = "{'GameGrid':[[[false],[false],[false],[false],[false]],[[false],[false],[false],[true],[false]],[[false],[false],[false],[true],[false]],[[false],[false],[false],[true],[false]],[[false],[false],[false],[false],[false]]],'Iteration':2,'AliveCellCount':[3],'AliveGridCount':1}  ";  
 
-            bool[,,] GameGrid = new bool[5, 5, 1];
-            int[] aliveCellCount = new int[1];
-            aliveCellCount[0] = 20;
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { "Saves/GameSave.json", new MockFileData(jsonData) }
+            });
 
-            Game game = new Game(GameGrid, 3, aliveCellCount, 1);
+            var gameSave = new GameSave(fileSystem);
+            var game = gameSave.ReadSaveFile();
 
-            var gameSaveMock = new Mock<IGameSave>();
-            //gameSaveMock.Setup(save => save.ReadSaveFile()).Returns(game);
+            SetUp();
 
-            //var saveInfo = gameSaveMock.ReadSaveFile();
-            //grid.CreateGridFromFile(saveInfo.GameGrid, saveInfo.Iteration, saveInfo.AliveCellCount, saveInfo.AliveGridCount);
-
-            gameSaveMock.Setup(save => save.ReadSaveFile()).Returns(game);
+            Assert.Equal(game.GameGrid, TestGame.GameGrid);
+            Assert.Equal(game.Iteration, TestGame.Iteration);
+            Assert.Equal(game.AliveCellCount, TestGame.AliveCellCount);
+            Assert.Equal(game.AliveGridCount, TestGame.AliveGridCount);
         }
     }
 }

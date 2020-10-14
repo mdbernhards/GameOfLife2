@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
+using System.IO.Abstractions;
 
 namespace GameOfLife
 {
@@ -8,8 +9,19 @@ namespace GameOfLife
     /// </summary>
     public class GameSave : IGameSave
     {
+        private readonly IFileSystem fileSystem;
+
         public const string filePath = "Saves/GameSave.json";
         public const string folderPath = "Saves/";
+
+        public GameSave(IFileSystem fileSystem)
+        {
+            this.fileSystem = fileSystem;
+        }
+
+        public GameSave() : this( fileSystem: new FileSystem())
+        {
+        }
 
         /// <summary>
         /// Saves game state when called
@@ -18,6 +30,7 @@ namespace GameOfLife
         {
             FileInfo file = new FileInfo(folderPath);
             file.Directory.Create();
+
 
             string[] filePaths = Directory.GetFiles(folderPath);
 
@@ -35,7 +48,10 @@ namespace GameOfLife
         /// </summary>
         public Game ReadSaveFile()
         {
-            Game game = JsonConvert.DeserializeObject<Game>(File.ReadAllText(filePath));
+            //var fileInfo = fileSystem.Directory.GetFiles(folderPath);
+            string fileText = fileSystem.File.ReadAllText(filePath);
+
+            Game game = JsonConvert.DeserializeObject<Game>(fileText);
             return game;
         }
     }
