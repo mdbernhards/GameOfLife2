@@ -11,8 +11,8 @@ namespace GameOfLife
     public class Grid
     {
         public Games Game { get; set; }
+        public bool[,,] NextGameGrid { get; set; }
 
-        private bool[,,] NextGameGrid;
         private bool FreshGame;
         private int[] LastAliveCellCount;
         private int[] SelectedGames;
@@ -66,11 +66,14 @@ namespace GameOfLife
         /// <summary>
         /// Constructor for unit tests
         /// </summary>
-        public Grid(IMenus menu, IGamePause gamePause, int numberOfGames)
+        public Grid(IMenus menu, IGamePause gamePause, int numberOfGames, Games saveInfo)
         {
             Menu = menu;
             Pause = gamePause;
+            Game = saveInfo;
             NumberOfGames = numberOfGames;
+            NextGameGrid = new bool[Game.Height, Game.Width, NumberOfGames];
+            LastAliveCellCount = new int[NumberOfGames];
         }
 
         /// <summary>

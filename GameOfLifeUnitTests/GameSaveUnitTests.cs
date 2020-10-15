@@ -33,6 +33,9 @@ namespace GameOfLifeUnitTests
         [Fact]
         public void LoadGameUnitTestJsonDataDeserialization()
         {
+            //Setup
+            SetUp();
+
             string jsonData = "{'GameGrid':[[[false],[false],[false],[false],[false]],[[false],[false],[false],[true],[false]],[[false],[false],[false],[true],[false]],[[false],[false],[false],[true],[false]],[[false],[false],[false],[false],[false]]],'Iteration':2,'AliveCellCount':[3],'AliveGridCount':1}  ";  
 
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -41,10 +44,11 @@ namespace GameOfLifeUnitTests
             });
 
             var gameSave = new GameSave(fileSystem);
+
+            //Act
             var game = gameSave.ReadSaveFile();
 
-            SetUp();
-
+            //Test
             Assert.Equal(game.GameGrid, TestGame.GameGrid);
             Assert.Equal(game.Iteration, TestGame.Iteration);
             Assert.Equal(game.AliveCellCount, TestGame.AliveCellCount);
