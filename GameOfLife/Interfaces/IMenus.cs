@@ -15,17 +15,44 @@ namespace GameOfLife.Interfaces
         /// <summary>
         /// UI that lets you select which grids to show, returns the grid "id's"
         /// </summary>
-        /// <param name="numberOfGames"> Number of games available and you can choose</param>
+        /// <param name="numberOfGames">Number of games available and you can choose</param>
         public int[] DisplayGameSelection(int numberOfGames);
 
         /// <summary>
         /// Displays the given string
         /// </summary>
-        /// <param name="text"> Text thats going to be displayed on screen</param>
+        /// <param name="text">Text thats going to be displayed on screen</param>
         public void DisplayOutput(string text);
+
+        /// <summary>
+        /// Draws the grid every time it has been updated
+        /// </summary>
+        /// <param name="game">Game object that has information of the grids that need to be drawn</param>
         public void DrawGrid(Games game);
+
+        /// <summary>
+        /// Draws eight grids every time they have been updated
+        /// </summary>
+        /// <param name="game">Game object that has information of the grids that need to be drawn</param>
+        /// <param name="selectedGames">8 Id's of games selected to be drawn</param>
         public void DrawEightGrids(Games game, int[] selectedGames);
+
+        /// <summary>
+        /// Draws a row of 4 grids
+        /// </summary>
+        /// <param name="game">Game object that has information of the grids that need to be drawn</param>
+        /// <param name="selectedGames">8 Id's of games selected to be drawn</param>
+        /// <param name="grids">StringBuilder that a row of grids will be added</param>
+        /// <param name="gridRow">What row of grids needs to be added to StringBuilder</param>
         public void DrawARowOfGrids(Games game, int[] selectedGames, StringBuilder grids, int gridRow);
+
+        /// <summary>
+        /// Draws the name and cell count of each shown grid
+        /// </summary>
+        /// <param name="game">Game object that has information of the grids that need to be drawn</param>
+        /// <param name="selectedGames">8 Id's of games selected to be drawn</param>
+        /// <param name="grids">StringBuilder that idividual grid statistics will be added</param>
+        /// <param name="gridRow">What line will the statistics be added</param>
         public void DrawGridTitles(Games game, int[] selectedGames, StringBuilder grids, int gridLine);
     }
 }

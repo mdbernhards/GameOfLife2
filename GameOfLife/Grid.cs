@@ -1,6 +1,5 @@
 ﻿using GameOfLife.Interfaces;
 using System;
-using System.Linq;
 using System.Timers;
 
 namespace GameOfLife
@@ -10,7 +9,14 @@ namespace GameOfLife
     /// </summary>
     public class Grid
     {
+        /// <summary>
+        /// Object that stores Game of Life information
+        /// </summary>
         public Games Game { get; set; }
+
+        /// <summary>
+        /// Used to update Game.GameGrid to next iteration
+        /// </summary>
         public bool[,,] NextGameGrid { get; set; }
 
         private bool FreshGame;
@@ -29,6 +35,7 @@ namespace GameOfLife
         /// <summary>
         /// Constructor to prepair Game of Life loaded from file
         /// </summary>
+        /// <param name="saveInfo">Object that stores Game of Life information from save file</param>
         public Grid(Games saveInfo)
         {
             Menu = new Menus();
@@ -51,6 +58,9 @@ namespace GameOfLife
         /// <summary>
         /// Constructor to prepair a new and fresh Game of Life
         /// </summary>
+        /// <param name="height">Height of grids for Game</param>
+        /// <param name="width">Width of grids for Game</param>
+        /// <param name="numberOfGames">Number of grids that will be made</param>
         public Grid(int height, int width, int numberOfGames)
         {
             Menu = new Menus();
@@ -66,6 +76,10 @@ namespace GameOfLife
         /// <summary>
         /// Constructor for unit tests
         /// </summary>
+        /// <param name="menu"> Menu object for mocking</param>
+        /// <param name="gamePause"> GamePause object for mocking</param>
+        /// <param name="numberOfGames">Number of grids that will be made</param>
+        /// <param name="saveInfo">Object that stores Game of Life information created for mocking</param>
         public Grid(IMenus menu, IGamePause gamePause, int numberOfGames, Games saveInfo)
         {
             Menu = menu;
@@ -194,6 +208,8 @@ namespace GameOfLife
         /// <summary>
         /// Updates the grid, calls methods that check if cells are alive or dead
         /// </summary>
+        /// <param name="source">Object for timer</param>
+        /// <param name="e">Object for timer</param>
         public void UpdateGrid(Object source, ElapsedEventArgs e)
         {
             Pause.CheckForPauseOrSave(Game, UpdateTimer);
@@ -236,6 +252,10 @@ namespace GameOfLife
         /// <summary>
         /// Checks if a cell is dead or alive, changes changes it in grid accordingly
         /// </summary>
+        /// <param name="height">Place in row of cell</param>
+        /// <param name="width">Place in collumn of cell</param>
+        /// <param name="alive">Bool statement: if cell is alive or dead</param>
+        /// <param name="gameNumber"> What grid the cell is on</param>
         public void CheckAndChangesIfCellAliveOrDead(int height, int width, bool alive, int gameNumber)
         {
             int aliveNeighbors = GetAliveNeighbors(height, width, gameNumber);
@@ -269,6 +289,9 @@ namespace GameOfLife
         /// <summary>
         /// Returns how many neighbor cells does a cell have
         /// </summary>
+        /// <param name="height">Place in row of cell</param>
+        /// <param name="width">Place in collumn of cell</param>
+        /// <param name="gameNumber"> What grid to check the neighbors on</param>
         public int GetAliveNeighbors(int height, int width, int gameNumber)
         {
             int aliveNeighbors = 0;

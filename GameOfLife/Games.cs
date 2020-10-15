@@ -7,11 +7,34 @@ namespace GameOfLife
     /// </summary>
     public class Games
     {
+        /// <summary>
+        /// All grids are stored in this array
+        /// </summary>
         public bool[,,] GameGrid { get; set; }
+
+        /// <summary>
+        /// How many times have the grids been updated
+        /// </summary>
         public int Iteration { get; set; }
+
+        /// <summary>
+        /// How many alive cells each grid has
+        /// </summary>
         public int[] AliveCellCount { get; set; }
+
+        /// <summary>
+        /// How many grids are alive and moving
+        /// </summary>
         public int AliveGridCount { get; set; }
+
+        /// <summary>
+        /// Height of grids
+        /// </summary>
         public int Height { get;}
+
+        /// <summary>
+        /// Width of grids
+        /// </summary>
         public int Width { get;}
 
         /// <summary>
