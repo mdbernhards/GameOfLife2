@@ -7,12 +7,25 @@ namespace GameOfLife.Interfaces
     /// </summary>
     public interface IMenus
     {
+        /// <summary>
+        /// Displays the game selection menu asks to enter one of the menu items and returns it
+        /// </summary>
         public string DisplayMenu();
+
+        /// <summary>
+        /// UI that lets you select which grids to show, returns the grid "id's"
+        /// </summary>
+        /// <param name="numberOfGames"> Number of games available and you can choose</param>
         public int[] DisplayGameSelection(int numberOfGames);
+
+        /// <summary>
+        /// Displays the given string
+        /// </summary>
+        /// <param name="text"> Text thats going to be displayed on screen</param>
         public void DisplayOutput(string text);
-        public void DrawGrid(bool[,,] gameGrid, int iteration, int aliveCellCount, int height, int width, int aliveGridCount);
-        public void DrawEightGrids(bool[,,] gameGrid, int iteration, int[] aliveCellCount, int height, int width, int[] selectedGames, int aliveGridCount);
-        public void DrawARowOfGrids(bool[,,] gameGrid, int height, int width, int[] selectedGames, StringBuilder grids, int gridRow);
-        public void DrawGridTitles(bool[,,] gameGrid, int[] aliveCellCount, int[] selectedGames, StringBuilder grids, int gridLine);
+        public void DrawGrid(Games game);
+        public void DrawEightGrids(Games game, int[] selectedGames);
+        public void DrawARowOfGrids(Games game, int[] selectedGames, StringBuilder grids, int gridRow);
+        public void DrawGridTitles(Games game, int[] selectedGames, StringBuilder grids, int gridLine);
     }
 }

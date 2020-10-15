@@ -13,7 +13,7 @@ namespace GameOfLife
         private GameSave gameSave;
 
         /// <summary>
-        /// Constuctor that creates objects for GamePause class
+        /// Constuctor  for pausing and saving class
         /// </summary>
         public GamePause()
         {
@@ -24,7 +24,9 @@ namespace GameOfLife
         /// <summary>
         /// Checks if Game of Life needs to be: paused, unpaused or saved
         /// </summary>
-        public void CheckForPauseOrSave(bool[,,] gameGrid, int iteration, int[] aliveCellCount, int aliveGridCount, Timer timer)
+        /// <param name="game"> Game object that stores information about game grid</param>
+        /// <param name="timer"> Timer object that can be stoped and started up again</param>
+        public void CheckForPauseOrSave(Games game, Timer timer)
         {
             while (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Spacebar)
             {
@@ -43,7 +45,7 @@ namespace GameOfLife
 
                     if (key == ConsoleKey.S)
                     {
-                        gameSave.SaveGame(gameGrid, iteration, aliveCellCount, aliveGridCount);
+                        gameSave.SaveGame(game);
                         menu.DisplayOutput("Game Saved!");
                     }
                 } while (true);

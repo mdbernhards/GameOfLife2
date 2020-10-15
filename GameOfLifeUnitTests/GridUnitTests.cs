@@ -18,13 +18,12 @@ namespace GameOfLifeUnitTests
         private void SetUp()
         {
             MenusMock.Setup(menus => menus.DrawGrid(It.IsAny<bool[,,]>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Verifiable();
-            GamePauseMock.Setup(pause => pause.CheckForPauseOrSave(It.IsAny<bool[,,]>(), It.IsAny<int>(), It.IsAny<int[]>(), It.IsAny<int>(), It.IsAny<Timer>())).Verifiable();
+            GamePauseMock.Setup(pause => pause.CheckForPauseOrSave(It.IsAny<Games>(), It.IsAny<Timer>())).Verifiable();
 
             Grids = new Grid(MenusMock.Object, GamePauseMock.Object, 1, 5, 5)
             {
-                AliveCellCount = new int[1],
                 LastAliveCellCount = new int[1],
-                GameGrid = new bool[5, 5, 1],
+                Game = new Games(new bool[5, 5, 1], 0, new int[1], 0),
                 NextGameGrid = new bool[5, 5, 1]
             };
 
@@ -47,7 +46,7 @@ namespace GameOfLifeUnitTests
             GameGrid[2, 3, 0] = true;
             GameGrid[3, 3, 0] = true;
 
-            Array.Copy(GameGrid, Grids.GameGrid, GameGrid.Length);
+            Array.Copy(GameGrid, Grids.Game.GameGrid, GameGrid.Length);
             Array.Copy(GameGrid, Grids.NextGameGrid, GameGrid.Length);
 
             Grids.UpdateGrid(null, null);
@@ -71,7 +70,7 @@ namespace GameOfLifeUnitTests
             GameGrid[3, 3, 0] = true;
             GameGrid[3, 2, 0] = true;
 
-            Array.Copy(GameGrid, Grids.GameGrid, GameGrid.Length);
+            Array.Copy(GameGrid, Grids.Game.GameGrid, GameGrid.Length);
             Array.Copy(GameGrid, Grids.NextGameGrid, GameGrid.Length);
 
             Grids.UpdateGrid(null, null);
@@ -83,6 +82,7 @@ namespace GameOfLifeUnitTests
         [Fact]
         public void GetAliveNeighborsUnitTest()
         {
+            //Setup
             SetUp();
 
             GameGrid[2, 1, 0] = true;
@@ -90,9 +90,12 @@ namespace GameOfLifeUnitTests
             GameGrid[3, 2, 0] = true;
             GameGrid[1, 2, 0] = true;
 
-            Array.Copy(GameGrid, Grids.GameGrid, GameGrid.Length);
+            Array.Copy(GameGrid, Grids.Game.GameGrid, GameGrid.Length);
+
+            //Act
             int aliveNeighbors = Grids.GetAliveNeighbors(2, 2, 0);
 
+            //Test
             Assert.Equal(4, aliveNeighbors);
         }
     }

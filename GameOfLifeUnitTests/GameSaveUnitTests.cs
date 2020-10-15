@@ -8,7 +8,7 @@ namespace GameOfLifeUnitTests
     public class GameSaveUnitTests
     {
         private bool[,,] Grid;
-        private Game TestGame;
+        private Games TestGame;
 
         private void SetUp()
         {
@@ -27,7 +27,7 @@ namespace GameOfLifeUnitTests
             Grid[3, 3, 0] = true;
 
             int[] aliveCellCount = { 3 };
-            TestGame = new Game(Grid, 2, aliveCellCount, 1);
+            TestGame = new Games(Grid, 2, aliveCellCount, 1);
         }
 
         [Fact]

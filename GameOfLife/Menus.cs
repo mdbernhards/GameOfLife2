@@ -37,6 +37,7 @@ namespace GameOfLife
         /// <summary>
         /// UI that lets you select which grids to show, returns the grid "id's"
         /// </summary>
+        /// <param name="numberOfGames"> Number of games available and you can choose</param>
         public int[] DisplayGameSelection(int numberOfGames)
         {
             int[] selectedGames = new int[8];
@@ -72,6 +73,7 @@ namespace GameOfLife
         /// <summary>
         /// Displays the given string
         /// </summary>
+        /// <param name="text"> Text thats going to be displayed on screen</param>
         public void DisplayOutput(string text)
         {
             Console.WriteLine(text);
@@ -80,25 +82,25 @@ namespace GameOfLife
         /// <summary>
         /// Draws the grid every time it has been updated
         /// </summary>
-        public virtual void DrawGrid(bool[,,] gameGrid, int iteration, int aliveCellCount, int height, int width, int aliveGridCount)
+        public void DrawGrid(Games game)
         {
             Console.Clear();
 
             StringBuilder gridString = new StringBuilder();
 
-            gridString.AppendLine("Iteration: " + iteration);
-            gridString.AppendLine("Alive cell count: " + aliveCellCount);
-            gridString.AppendLine("Alive Grid count: " + aliveGridCount);
+            gridString.AppendLine("Iteration: " + game.Iteration);
+            gridString.AppendLine("Alive cell count: " + game.AliveCellCount.Sum());
+            gridString.AppendLine("Alive Grid count: " + game.AliveGridCount);
             gridString.AppendLine("");
             gridString.AppendLine("Press Space to pause and unpause");
             gridString.AppendLine("While Paused press S to save");
             gridString.AppendLine("");
 
-            for (int line = 0; line < height; line++)
+            for (int line = 0; line < game.Height; line++)
             {
-                for (int character = 0; character < width; character++)
+                for (int character = 0; character < game.Width; character++)
                 {
-                    if (gameGrid[line, character, 0] == true)
+                    if (game.GameGrid[line, character, 0] == true)
                     {
                         gridString.Append("█");
                     }
@@ -117,15 +119,15 @@ namespace GameOfLife
         /// <summary>
         /// Draws eight grids every time they have been updated
         /// </summary>
-        public void DrawEightGrids(bool[,,] gameGrid, int iteration, int[] aliveCellCount, int height, int width, int[] selectedGames, int aliveGridCount)
+        public void DrawEightGrids(Games game, int[] selectedGames)
         {
             Console.Clear();
 
             StringBuilder gridsString = new StringBuilder();
 
-            gridsString.AppendLine("Iteration: " + iteration);
-            gridsString.AppendLine("Total alive cell count: " + aliveCellCount.Sum());
-            gridsString.AppendLine("Alive Grid count: " + aliveGridCount);
+            gridsString.AppendLine("Iteration: " + game.Iteration);
+            gridsString.AppendLine("Total alive cell count: " + game.AliveCellCount.Sum());
+            gridsString.AppendLine("Alive Grid count: " + game.AliveGridCount);
             gridsString.AppendLine("");
             gridsString.AppendLine("Press Space to pause and unpause");
             gridsString.AppendLine("While Paused press S to save");
@@ -133,8 +135,8 @@ namespace GameOfLife
 
             for (int gridRow = 0; gridRow < 2; gridRow++)
             {
-                DrawGridTitles(gameGrid, aliveCellCount, selectedGames, gridsString, gridRow);
-                DrawARowOfGrids(gameGrid, height, width, selectedGames, gridsString, gridRow);
+                DrawGridTitles(game, selectedGames, gridsString, gridRow);
+                DrawARowOfGrids(game, selectedGames, gridsString, gridRow);
             }
 
             Console.WriteLine(gridsString);
@@ -143,9 +145,9 @@ namespace GameOfLife
         /// <summary>
         /// Draws a row of 4 grids
         /// </summary>
-        public void DrawARowOfGrids(bool[,,] gameGrid, int height, int width, int[] selectedGames, StringBuilder grids, int gridRow)
+        public void DrawARowOfGrids(Games game, int[] selectedGames, StringBuilder grids, int gridRow)
         {
-            for (int line = 0; line < height; line++)
+            for (int line = 0; line < game.Height; line++)
             {
                 for (int gridColumn = 0; gridColumn < 4; gridColumn++)
                 {
@@ -154,9 +156,9 @@ namespace GameOfLife
                         gridColumn += 4;
                     }
 
-                    for (int character = 0; character < width; character++)
+                    for (int character = 0; character < game.Width; character++)
                     {
-                        if (gameGrid[line, character, selectedGames[gridColumn]] == true)
+                        if (game.GameGrid[line, character, selectedGames[gridColumn]])
                         {
                             grids.Append("█");
                         }
@@ -183,17 +185,17 @@ namespace GameOfLife
         /// <summary>
         /// Draws the name and cell count of each shown grid
         /// </summary>
-        public void DrawGridTitles(bool[,,] gameGrid, int[] aliveCellCount, int[] selectedGames, StringBuilder grids, int gridLine)
+        public void DrawGridTitles(Games game, int[] selectedGames, StringBuilder grids, int gridLine)
         {
-            for (int game = 0; game < 4; game++)
+            for (int title = 0; title < 4; title++)
             {
                 if (gridLine == 0)
                 {
-                    grids.Append(" Game: " + (selectedGames[game] + 1) + "  Alive cell count: " + aliveCellCount[selectedGames[game]] + new string(' ', gameGrid.GetLength(1) - 27));
+                    grids.Append(" Game: " + (selectedGames[title] + 1) + "  Alive cell count: " + game.AliveCellCount[selectedGames[title]] + new string(' ', game.GameGrid.GetLength(1) - 27));
                 }
                 else
                 {
-                    grids.Append(" Game: " + (selectedGames[game + 4] + 1) + "  Alive cell count: " + aliveCellCount[selectedGames[game + 4]] + new string(' ', gameGrid.GetLength(1) - 27));
+                    grids.Append(" Game: " + (selectedGames[title + 4] + 1) + "  Alive cell count: " + game.AliveCellCount[selectedGames[title + 4]] + new string(' ', game.GameGrid.GetLength(1) - 27));
                 }
             }
 

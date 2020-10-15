@@ -1,4 +1,5 @@
-﻿using GameOfLife.Interfaces;
+﻿using GameOfLife.Enums;
+using GameOfLife.Interfaces;
 using System;
 
 namespace GameOfLife
@@ -8,31 +9,17 @@ namespace GameOfLife
     /// </summary>
     public class GameManager
     {
-        private GameSave gameSave { get; set; }
-        private IMenus menus { get; set; }
-        private Grid grid { get; set; }
+        private readonly GameSave gameSave;
+        private readonly IMenus menus;
+        private Grid grid;
 
         /// <summary>
-        /// Enum for menu
-        /// </summary>
-        enum MenuItems 
-        { 
-            SmallGrid = 1,
-            BigGrid = 2,
-            CustomGrid = 3,
-            ThousandGrids = 4,
-            LoadFromFile = 5,
-            Exit = 6
-        };
-
-        /// <summary>
-        /// Constuctor that creates objects for GameManager class
+        /// Constuctor that creates gameSave, menus and grid objects
         /// </summary>
         public GameManager()
         {
             gameSave = new GameSave();
             menus = new Menus();
-            grid = new Grid();
         }
 
         /// <summary>
@@ -46,8 +33,8 @@ namespace GameOfLife
             switch (menuItems)
             {
                 case MenuItems.SmallGrid:
-                    grid = new Grid(30, 60, 1);
-                    grid.CreateGrids(); //height, width, number of games in paralel
+                    grid = new Grid(30, 60, 1); //height, width, number of games in paralel
+                    grid.CreateGrids(); 
                     break;
                 case MenuItems.BigGrid:
                     grid = new Grid(40, 80, 1);
@@ -62,10 +49,11 @@ namespace GameOfLife
                     grid.CreateGrids();
                     break;
                 case MenuItems.LoadFromFile:
-                    grid = new Grid();
-
+                    
                     var saveInfo = gameSave.ReadSaveFile();
-                    grid.CreateGridFromFile(saveInfo.GameGrid, saveInfo.Iteration, saveInfo.AliveCellCount, saveInfo.AliveGridCount);
+                    grid = new Grid(saveInfo);
+
+                    grid.CreateGridFromFile();
                     break;
                 case MenuItems.Exit:
                     break;

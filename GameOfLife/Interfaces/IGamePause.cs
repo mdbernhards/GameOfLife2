@@ -7,6 +7,11 @@ namespace GameOfLife.Interfaces
     /// </summary>
     public interface IGamePause
     {
-        public void CheckForPauseOrSave(bool[,,] gameGrid, int iteration, int[] aliveCellCount, int aliveGridCount, Timer timer);
+        /// <summary>
+        /// Checks if Game of Life needs to be: paused, unpaused or saved
+        /// </summary>
+        /// <param name="game"> Game object that stores information about game grid</param>
+        /// <param name="timer"> Timer object that can be stoped and started up again</param>
+        public void CheckForPauseOrSave(Games game, Timer timer);
     }
 }

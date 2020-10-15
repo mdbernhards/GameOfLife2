@@ -10,15 +10,20 @@ namespace GameOfLife
     public class GameSave : IGameSave
     {
         private readonly IFileSystem fileSystem;
+        private const string filePath = "Saves/GameSave.json";
+        private const string folderPath = "Saves/";
 
-        public const string filePath = "Saves/GameSave.json";
-        public const string folderPath = "Saves/";
-
+        /// <summary>
+        /// Saves and loads Game of Life
+        /// </summary>
         public GameSave(IFileSystem fileSystem)
         {
             this.fileSystem = fileSystem;
         }
 
+        /// <summary>
+        /// Saves and loads Game of Life
+        /// </summary>
         public GameSave() : this( fileSystem: new FileSystem())
         {
         }
@@ -26,11 +31,11 @@ namespace GameOfLife
         /// <summary>
         /// Saves game state when called
         /// </summary>
-        public void SaveGame(bool[, ,] gameGrid, int iteration, int[] aliveCellCount, int aliveGridCount)
+        /// <param name="game">Game object that stores gameGrid, aliveCellCount, aliveGridCount and iteration</param>
+        public void SaveGame(Games game)
         {
             FileInfo file = new FileInfo(folderPath);
             file.Directory.Create();
-
 
             string[] filePaths = Directory.GetFiles(folderPath);
 
@@ -39,19 +44,17 @@ namespace GameOfLife
                 File.Delete(filePath);
             }
 
-            Game game = new Game(gameGrid, iteration - 1, aliveCellCount, aliveGridCount);
             File.WriteAllText(filePath, JsonConvert.SerializeObject(game));
         }
 
         /// <summary>
         /// Loads and returns saved game state when called
         /// </summary>
-        public Game ReadSaveFile()
+        public Games ReadSaveFile()
         {
-            //var fileInfo = fileSystem.Directory.GetFiles(folderPath);
             string fileText = fileSystem.File.ReadAllText(filePath);
 
-            Game game = JsonConvert.DeserializeObject<Game>(fileText);
+            Games game = JsonConvert.DeserializeObject<Games>(fileText);
             return game;
         }
     }
