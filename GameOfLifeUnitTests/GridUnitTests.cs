@@ -79,5 +79,23 @@ namespace GameOfLifeUnitTests
             Assert.Equal(GameGrid, grid.NextGameGrid);
             Mock.VerifyAll();
         }
+
+        [Fact]
+        public void GetAliveNeighborsUnitTest()
+        {
+            SetUp();
+
+            GameGrid[2, 1, 0] = true;
+            GameGrid[2, 3, 0] = true;
+            GameGrid[3, 2, 0] = true;
+            GameGrid[1, 2, 0] = true;
+
+            Array.Copy(GameGrid, grid.GameGrid, GameGrid.Length);
+            Array.Copy(GameGrid, grid.NextGameGrid, GameGrid.Length);
+
+            int aliveNeighbors = grid.GetAliveNeighbors(2, 2, 0);
+
+            Assert.Equal(4, aliveNeighbors);
+        }
     }
 }

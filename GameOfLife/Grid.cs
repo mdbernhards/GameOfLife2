@@ -281,7 +281,7 @@ namespace GameOfLife
         /// <summary>
         /// Returns how many neighbor cells does a cell have
         /// </summary>
-        private int GetAliveNeighbors(int height, int width, int gameNumber)
+        public int GetAliveNeighbors(int height, int width, int gameNumber)
         {
             int aliveNeighbors = 0;
             int[,] neighbors = new int[,] { { -1, -1 }, { 0, -1 }, { 1, -1 }, 
