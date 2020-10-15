@@ -46,18 +46,24 @@ namespace GameOfLife
             switch (menuItems)
             {
                 case MenuItems.SmallGrid:
-                    grid.CreateGrids(30, 60, 1); //height, width, number of games in paralel
+                    grid = new Grid(30, 60, 1);
+                    grid.CreateGrids(); //height, width, number of games in paralel
                     break;
                 case MenuItems.BigGrid:
-                    grid.CreateGrids(40, 80, 1);
+                    grid = new Grid(40, 80, 1);
+                    grid.CreateGrids();
                     break;
                 case MenuItems.CustomGrid:
-                    grid.CreateCustomGrid(30, 30);
+                    grid = new Grid(30, 30, 1);
+                    grid.CreateCustomGrid();
                     break;
                 case MenuItems.ThousandGrids:
-                    grid.CreateGrids(18, 40, 1000);
+                    grid = new Grid(18, 40, 1000);
+                    grid.CreateGrids();
                     break;
                 case MenuItems.LoadFromFile:
+                    grid = new Grid();
+
                     var saveInfo = gameSave.ReadSaveFile();
                     grid.CreateGridFromFile(saveInfo.GameGrid, saveInfo.Iteration, saveInfo.AliveCellCount, saveInfo.AliveGridCount);
                     break;

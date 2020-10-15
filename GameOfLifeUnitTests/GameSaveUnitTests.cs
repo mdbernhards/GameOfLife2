@@ -31,7 +31,7 @@ namespace GameOfLifeUnitTests
         }
 
         [Fact]
-        public void LoadGameUnitTest()
+        public void LoadGameUnitTestJsonDataDeserialization()
         {
             string jsonData = "{'GameGrid':[[[false],[false],[false],[false],[false]],[[false],[false],[false],[true],[false]],[[false],[false],[false],[true],[false]],[[false],[false],[false],[true],[false]],[[false],[false],[false],[false],[false]]],'Iteration':2,'AliveCellCount':[3],'AliveGridCount':1}  ";  
 

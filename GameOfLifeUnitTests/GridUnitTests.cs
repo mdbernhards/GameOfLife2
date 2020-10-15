@@ -9,18 +9,18 @@ namespace GameOfLifeUnitTests
 {
     public class GridUnitTests
     {
-        private Mock<IMenus> menusMock = new Mock<IMenus>();
-        private Mock<IGamePause> gamePauseMock = new Mock<IGamePause>();
+        private readonly Mock<IMenus> MenusMock = new Mock<IMenus>();
+        private readonly Mock<IGamePause> GamePauseMock = new Mock<IGamePause>();
 
-        private Grid grid;
-        private bool[,,] GameGrid;
+        private Grid Grids { get; set; }
+        private bool[,,] GameGrid { get; set; }
 
         private void SetUp()
         {
-            menusMock.Setup(menus => menus.DrawGrid(It.IsAny<bool[,,]>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Verifiable();
-            gamePauseMock.Setup(pause => pause.CheckForPauseOrSave(It.IsAny<bool[,,]>(), It.IsAny<int>(), It.IsAny<int[]>(), It.IsAny<int>(), It.IsAny<Timer>())).Verifiable();
+            MenusMock.Setup(menus => menus.DrawGrid(It.IsAny<bool[,,]>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Verifiable();
+            GamePauseMock.Setup(pause => pause.CheckForPauseOrSave(It.IsAny<bool[,,]>(), It.IsAny<int>(), It.IsAny<int[]>(), It.IsAny<int>(), It.IsAny<Timer>())).Verifiable();
 
-            grid = new Grid(menusMock.Object, gamePauseMock.Object, 1, 5, 5)
+            Grids = new Grid(MenusMock.Object, GamePauseMock.Object, 1, 5, 5)
             {
                 AliveCellCount = new int[1],
                 LastAliveCellCount = new int[1],
@@ -39,7 +39,7 @@ namespace GameOfLifeUnitTests
         }
 
         [Fact]
-        public void UpdateGridTestMovingShape()
+        public void UpdateGridUnitTestMovingBlinkerShape()
         {
             SetUp();
 
@@ -47,22 +47,22 @@ namespace GameOfLifeUnitTests
             GameGrid[2, 3, 0] = true;
             GameGrid[3, 3, 0] = true;
 
-            Array.Copy(GameGrid, grid.GameGrid, GameGrid.Length);
-            Array.Copy(GameGrid, grid.NextGameGrid, GameGrid.Length);
+            Array.Copy(GameGrid, Grids.GameGrid, GameGrid.Length);
+            Array.Copy(GameGrid, Grids.NextGameGrid, GameGrid.Length);
 
-            grid.UpdateGrid(null, null);
+            Grids.UpdateGrid(null, null);
 
             GameGrid[1, 3, 0] = false;
             GameGrid[3, 3, 0] = false;
             GameGrid[2, 2, 0] = true;
             GameGrid[2, 4, 0] = true;
 
-            Assert.Equal(GameGrid, grid.NextGameGrid);
+            Assert.Equal(GameGrid, Grids.NextGameGrid);
             Mock.VerifyAll();
         }
 
         [Fact]
-        public void UpdateGridTestStaticShape()
+        public void UpdateGridTestStaticCubeShape()
         {
             SetUp();
 
@@ -71,12 +71,12 @@ namespace GameOfLifeUnitTests
             GameGrid[3, 3, 0] = true;
             GameGrid[3, 2, 0] = true;
 
-            Array.Copy(GameGrid, grid.GameGrid, GameGrid.Length);
-            Array.Copy(GameGrid, grid.NextGameGrid, GameGrid.Length);
+            Array.Copy(GameGrid, Grids.GameGrid, GameGrid.Length);
+            Array.Copy(GameGrid, Grids.NextGameGrid, GameGrid.Length);
 
-            grid.UpdateGrid(null, null);
+            Grids.UpdateGrid(null, null);
 
-            Assert.Equal(GameGrid, grid.NextGameGrid);
+            Assert.Equal(GameGrid, Grids.NextGameGrid);
             Mock.VerifyAll();
         }
 
@@ -90,10 +90,8 @@ namespace GameOfLifeUnitTests
             GameGrid[3, 2, 0] = true;
             GameGrid[1, 2, 0] = true;
 
-            Array.Copy(GameGrid, grid.GameGrid, GameGrid.Length);
-            Array.Copy(GameGrid, grid.NextGameGrid, GameGrid.Length);
-
-            int aliveNeighbors = grid.GetAliveNeighbors(2, 2, 0);
+            Array.Copy(GameGrid, Grids.GameGrid, GameGrid.Length);
+            int aliveNeighbors = Grids.GetAliveNeighbors(2, 2, 0);
 
             Assert.Equal(4, aliveNeighbors);
         }

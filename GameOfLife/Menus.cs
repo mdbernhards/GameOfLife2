@@ -47,7 +47,6 @@ namespace GameOfLife
             for (int gameNumber = 0; gameNumber < 8; gameNumber++)
             {
                 Console.Write("Game No. " + (gameNumber + 1) + ": ");
-
                 string number = Console.ReadLine();
 
                 if (int.TryParse(number, out int numberValue))
@@ -85,15 +84,15 @@ namespace GameOfLife
         {
             Console.Clear();
 
-            StringBuilder grid = new StringBuilder();
+            StringBuilder gridString = new StringBuilder();
 
-            grid.AppendLine("Iteration: " + iteration);
-            grid.AppendLine("Alive cell count: " + aliveCellCount);
-            grid.AppendLine("Alive Grid count: " + aliveGridCount);
-            grid.AppendLine("");
-            grid.AppendLine("Press Space to pause and unpause");
-            grid.AppendLine("While Paused press S to save");
-            grid.AppendLine("");
+            gridString.AppendLine("Iteration: " + iteration);
+            gridString.AppendLine("Alive cell count: " + aliveCellCount);
+            gridString.AppendLine("Alive Grid count: " + aliveGridCount);
+            gridString.AppendLine("");
+            gridString.AppendLine("Press Space to pause and unpause");
+            gridString.AppendLine("While Paused press S to save");
+            gridString.AppendLine("");
 
             for (int line = 0; line < height; line++)
             {
@@ -101,18 +100,18 @@ namespace GameOfLife
                 {
                     if (gameGrid[line, character, 0] == true)
                     {
-                        grid.Append("█");
+                        gridString.Append("█");
                     }
                     else
                     {
-                        grid.Append(" ");
+                        gridString.Append(" ");
                     }
                 }
 
-                grid.AppendLine("");
+                gridString.AppendLine("");
             }
 
-            Console.WriteLine(grid);
+            Console.WriteLine(gridString);
         }
 
         /// <summary>
@@ -122,23 +121,23 @@ namespace GameOfLife
         {
             Console.Clear();
 
-            StringBuilder grids = new StringBuilder();
+            StringBuilder gridsString = new StringBuilder();
 
-            grids.AppendLine("Iteration: " + iteration);
-            grids.AppendLine("Total alive cell count: " + aliveCellCount.Sum());
-            grids.AppendLine("Alive Grid count: " + aliveGridCount);
-            grids.AppendLine("");
-            grids.AppendLine("Press Space to pause and unpause");
-            grids.AppendLine("While Paused press S to save");
-            grids.AppendLine("");
+            gridsString.AppendLine("Iteration: " + iteration);
+            gridsString.AppendLine("Total alive cell count: " + aliveCellCount.Sum());
+            gridsString.AppendLine("Alive Grid count: " + aliveGridCount);
+            gridsString.AppendLine("");
+            gridsString.AppendLine("Press Space to pause and unpause");
+            gridsString.AppendLine("While Paused press S to save");
+            gridsString.AppendLine("");
 
             for (int gridRow = 0; gridRow < 2; gridRow++)
             {
-                DrawGridTitles(gameGrid, aliveCellCount, selectedGames, grids, gridRow);
-                DrawARowOfGrids(gameGrid, height, width, selectedGames, grids, gridRow);
+                DrawGridTitles(gameGrid, aliveCellCount, selectedGames, gridsString, gridRow);
+                DrawARowOfGrids(gameGrid, height, width, selectedGames, gridsString, gridRow);
             }
 
-            Console.WriteLine(grids);
+            Console.WriteLine(gridsString);
         }
 
         /// <summary>

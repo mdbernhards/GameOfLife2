@@ -38,6 +38,22 @@ namespace GameOfLife
             Pause = new GamePause();
         }
 
+        public Grid(int height, int width, int numberOfGames)
+        {
+            Menu = new Menus();
+            Pause = new GamePause();
+
+            Height = height;
+            Width = width;
+            NumberOfGames = numberOfGames;
+
+            SelectedGames = new int[8];
+            GameGrid = new bool[Height, Width, NumberOfGames];
+            NextGameGrid = new bool[Height, Width, NumberOfGames];
+            AliveCellCount = new int[NumberOfGames];
+            LastAliveCellCount = new int[NumberOfGames];
+        }
+
         /// <summary>
         /// Constructor to create the object with all the necessary information
         /// </summary>
@@ -53,16 +69,8 @@ namespace GameOfLife
         /// <summary>
         /// Creates random start grid when it's selected from start menu
         /// </summary>
-        public void CreateGrids(int height, int width, int numberOfGames)
+        public void CreateGrids()
         {
-            SelectedGames = new int[8];
-            NumberOfGames = numberOfGames;
-            Height = height;
-            Width = width;
-            GameGrid = new bool[Height, Width, NumberOfGames];
-            NextGameGrid = new bool[Height, Width, NumberOfGames];
-            AliveCellCount = new int[NumberOfGames];
-            LastAliveCellCount = new int[NumberOfGames];
 
             if (NumberOfGames > 1)
             {
@@ -103,17 +111,8 @@ namespace GameOfLife
         /// <summary>
         /// Creates custom start grid when selected from menu
         /// </summary>
-        public void CreateCustomGrid(int height, int width)
+        public void CreateCustomGrid()
         {
-            NumberOfGames = 1;
-            Height = height;
-            Width = width;
-
-            GameGrid = new bool[Height, Width, NumberOfGames];
-            NextGameGrid = new bool[Height, Width, NumberOfGames];
-            AliveCellCount = new int[NumberOfGames];
-            LastAliveCellCount = new int[NumberOfGames];
-
             for (int line = 0; line < Height; line++)
             {
                 for (int character = 0; character < Width; character++)
