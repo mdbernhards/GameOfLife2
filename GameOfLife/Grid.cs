@@ -20,14 +20,13 @@ namespace GameOfLife
         public bool[,,] NextGameGrid { get; set; }
 
         private bool FreshGame;
-        private int[] LastAliveCellCount;
         private int[] SelectedGames;
-        private int NumberOfGames;
-        private int FreshAliveGridCount;
+        private readonly int NumberOfGames;
+        private readonly int NewAliveGridCount;
 
         private static Timer UpdateTimer;
-        private IMenus Menu;
-        private IGamePause Pause;
+        private readonly IMenus Menu;
+        private readonly IGamePause Pause;
 
         private const bool AliveCell = true;
         private const bool DeadCell = false;
@@ -43,15 +42,13 @@ namespace GameOfLife
             Game = saveInfo;
 
             NumberOfGames = Game.GameGrid.GetLength(2);
-            LastAliveCellCount = new int[NumberOfGames];
             SelectedGames = new int[8];
             FreshGame = true;
+            Game.Iteration--;
 
             NextGameGrid = new bool[Game.GameGrid.GetLength(0), Game.GameGrid.GetLength(1), NumberOfGames];
+            NewAliveGridCount = Game.AliveGridCount;
 
-            FreshAliveGridCount = Game.AliveGridCount;
-
-            Array.Copy(Game.AliveCellCount, LastAliveCellCount, Game.AliveCellCount.Length);
             Array.Copy(Game.GameGrid, NextGameGrid, Game.GameGrid.Length);
         }
 
@@ -70,7 +67,6 @@ namespace GameOfLife
 
             SelectedGames = new int[8];
             NextGameGrid = new bool[Game.Height, Game.Width, NumberOfGames];
-            LastAliveCellCount = new int[NumberOfGames];
         }
 
         /// <summary>
@@ -87,7 +83,6 @@ namespace GameOfLife
             Game = saveInfo;
             NumberOfGames = numberOfGames;
             NextGameGrid = new bool[Game.Height, Game.Width, NumberOfGames];
-            LastAliveCellCount = new int[NumberOfGames];
         }
 
         /// <summary>
@@ -125,7 +120,6 @@ namespace GameOfLife
                 }
             }
 
-            Array.Copy(Game.AliveCellCount, LastAliveCellCount, Game.AliveCellCount.Length);
             Array.Copy(Game.GameGrid, NextGameGrid, Game.GameGrid.Length);
 
             SetUpdateTimer();
@@ -168,7 +162,6 @@ namespace GameOfLife
 
             Game.AliveCellCount[0] += 21;
 
-            Array.Copy(Game.AliveCellCount, LastAliveCellCount, Game.AliveCellCount.Length);
             Array.Copy(Game.GameGrid, NextGameGrid, Game.GameGrid.Length);
 
             SetUpdateTimer();
@@ -218,7 +211,6 @@ namespace GameOfLife
             Game.AliveGridCount = NumberOfGames;
 
             GetAliveGrids();
-            Array.Copy(Game.AliveCellCount, LastAliveCellCount, Game.AliveCellCount.Length);
             Array.Copy(NextGameGrid, Game.GameGrid, Game.GameGrid.Length);
 
             if (NumberOfGames > 1)
@@ -356,7 +348,7 @@ namespace GameOfLife
             }
             else if(FreshGame == true)
             {
-                Game.AliveGridCount = FreshAliveGridCount;
+                Game.AliveGridCount = NewAliveGridCount;
                 FreshGame = false;
             }
         }

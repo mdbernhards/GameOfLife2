@@ -2,6 +2,7 @@ using Xunit;
 using GameOfLife;
 using System.IO.Abstractions.TestingHelpers;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace GameOfLifeUnitTests
 {
@@ -36,11 +37,9 @@ namespace GameOfLifeUnitTests
             //Setup
             SetUp();
 
-            string jsonData = "{'GameGrid':[[[false],[false],[false],[false],[false]],[[false],[false],[false],[true],[false]],[[false],[false],[false],[true],[false]],[[false],[false],[false],[true],[false]],[[false],[false],[false],[false],[false]]],'Iteration':2,'AliveCellCount':[3],'AliveGridCount':1}  ";  
-
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { "Saves/GameSave.json", new MockFileData(jsonData) }
+                { "Saves/GameSave.json", new MockFileData(JsonConvert.SerializeObject(TestGame)) }
             });
 
             var gameSave = new GameSave(fileSystem);
