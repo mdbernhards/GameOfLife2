@@ -6,11 +6,18 @@ using Newtonsoft.Json;
 
 namespace GameOfLifeUnitTests
 {
+    /// <summary>
+    /// Unit tests that test the GameSave Class
+    /// </summary>
     public class GameSaveUnitTests
     {
         private bool[,,] Grid;
         private Games TestGame;
 
+
+        /// <summary>
+        /// Sets up needed variables and objects for GameSave tests
+        /// </summary>
         private void SetUp()
         {
             Grid = new bool[5, 5, 1];
@@ -31,6 +38,9 @@ namespace GameOfLifeUnitTests
             TestGame = new Games(Grid, 2, aliveCellCount, 1);
         }
 
+        /// <summary>
+        /// Tests if ReadSaveFile method works correctly by mocking the fileSystem
+        /// </summary>
         [Fact]
         public void LoadGameUnitTestJsonDataDeserialization()
         {

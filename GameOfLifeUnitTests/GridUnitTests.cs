@@ -7,6 +7,9 @@ using System.Timers;
 
 namespace GameOfLifeUnitTests
 {
+    /// <summary>
+    /// Unit tests that test the Grid Class
+    /// </summary>
     public class GridUnitTests
     {
         private readonly Mock<IMenus> MenusMock = new Mock<IMenus>();
@@ -14,6 +17,9 @@ namespace GameOfLifeUnitTests
         private Grid Grids;
         private bool[,,] GameGrid;
 
+        /// <summary>
+        /// Sets up needed variables and objects for Grid tests
+        /// </summary>
         private void SetUp()
         {
             MenusMock.Setup(menus => menus.DrawGrid(It.IsAny<Games>()));
@@ -32,6 +38,9 @@ namespace GameOfLifeUnitTests
             }
         }
 
+        /// <summary>
+        /// Tests if UpdateGrid logic is working correctly on a shape that changes after update
+        /// </summary>
         [Fact]
         public void UpdateGridUnitTestMovingBlinkerShape()
         {
@@ -61,6 +70,9 @@ namespace GameOfLifeUnitTests
             Assert.Equal(testGrid, Grids.NextGameGrid);
         }
 
+        /// <summary>
+        /// Tests if UpdateGrid logic is working correctly on a shape that doesn't change after update
+        /// </summary>
         [Fact]
         public void UpdateGridTestStaticCubeShape()
         {
@@ -82,6 +94,9 @@ namespace GameOfLifeUnitTests
             Assert.Equal(GameGrid, Grids.NextGameGrid);
         }
 
+        /// <summary>
+        /// Tests if GetAliveNeighbors correctly counts neighbors of a cell
+        /// </summary>
         [Fact]
         public void GetAliveNeighborsUnitTest()
         {
